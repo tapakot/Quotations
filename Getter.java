@@ -12,7 +12,7 @@ public class Getter {
 
     public static ArrayList<Quotation> getHistoryOf(short period){
         ArrayList<Quotation> list = new ArrayList<>();
-        String path = "C:\\Users\\805932\\Desktop\\History\\EURUSD"+ period+".xls"; //ought to be relative
+        String path = "res\\EURUSD"+ period+".xls"; //ought to be relative
         InputStream in = null; //probably not the best way to read. see InStreams vs. Files
         Workbook wb = null;
         try {

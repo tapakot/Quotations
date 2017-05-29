@@ -27,7 +27,7 @@ public class CsvToXlsParser {
         while (thisLine != null)
         {
             cells = new ArrayList();
-            String str[] = thisLine.split(";");
+            String str[] = thisLine.split(",");
             for(int j=0;j<str.length;j++) {
                 cells.add(str[j]);
             }
