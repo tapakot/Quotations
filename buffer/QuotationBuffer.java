@@ -1,6 +1,7 @@
 package buffer;
 
 import common.Quotation;
+import common.Worker;
 
 import java.util.ArrayList;
 
@@ -12,6 +13,7 @@ public class QuotationBuffer {
     volatile ArrayList<Quotation> quotations240;
     private int counter;//used by real-time thread
     public boolean isReady;
+    Worker worker;
 
     public QuotationBuffer(){
         quotations5 = new ArrayList<>();
@@ -23,7 +25,8 @@ public class QuotationBuffer {
         isReady = false;
     }
 
-    public void startThread(){
+    public void startThread(Worker worker){
+        this.worker = worker;
         RealTimeThread realTimeThread = new RealTimeThread();
         realTimeThread.setBuffer(this);
         realTimeThread.start();
@@ -54,6 +57,7 @@ public class QuotationBuffer {
     void realTimeEvent(Quotation quo){
         counter += quo.period;
         changeBuffer(quo);
+        worker.realTimeEvent();
         if(counter == 240){
             counter = 0;
         }
@@ -82,12 +86,12 @@ public class QuotationBuffer {
         }
     }
 
-    private void showQuotations(){
+    void showQuotations(){
         for (Quotation q : quotations5){
             System.out.println(q.period+" "+q.open+" "+q.high+" "+q.low+" "+q.close);
         }
         System.out.println("===========================================================================================");
-        for (Quotation q : quotations15){
+        /*for (Quotation q : quotations15){
             System.out.println(q.period+" "+q.open+" "+q.high+" "+q.low+" "+q.close);
         }
         System.out.println("===========================================================================================");
@@ -102,6 +106,6 @@ public class QuotationBuffer {
         for (Quotation q : quotations240){
             System.out.println(q.period+" "+q.open+" "+q.high+" "+q.low+" "+q.close);
         }
-        System.out.println("===========================================================================================");
+        System.out.println("===========================================================================================");*/
     }
 }

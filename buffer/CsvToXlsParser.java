@@ -8,7 +8,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import java.io.*;
 import java.util.ArrayList;
 
-public class CsvToXlsParser {
+class CsvToXlsParser {
     public static void parse(short period){
         ArrayList cells = null;
         ArrayList rows = new ArrayList();

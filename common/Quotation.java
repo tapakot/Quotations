@@ -22,4 +22,11 @@ public class Quotation {
     public Quotation(){
         this.period = 5;
     }
+
+    @Override
+    public String toString(){
+        String result;
+        result = period + ". o:" + open +" h:"+ high+ " l:"+low+" c:"+close;
+        return result;
+    }
 }

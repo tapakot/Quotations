@@ -2,6 +2,7 @@ package buffer;
 
 import com.pretty_tools.dde.DDEException;
 import com.pretty_tools.dde.client.DDEClientConversation;
+import common.Quotation;
 
 import java.awt.*;
 import java.io.File;
@@ -9,6 +10,7 @@ import java.io.IOException;
 
 class RealTimeThread extends Thread{
     QuotationBuffer buffer;
+
     void setBuffer(QuotationBuffer buffer){
         this.buffer = buffer;
     }
@@ -17,7 +19,6 @@ class RealTimeThread extends Thread{
     public void run(){
         System.out.println("getting history");
         setHistory();
-        buffer.isReady = true;
         realTime();
     }
 
@@ -41,6 +42,7 @@ class RealTimeThread extends Thread{
             conversation.startAdvice("R1C4");
 
             System.out.println("Started to listen real-time changes");
+            buffer.isReady = true;
             while(true){}
             //conversation.disconnect();
         }
@@ -50,14 +52,15 @@ class RealTimeThread extends Thread{
     private void setHistory(){
         HistoryGetter getter = new HistoryGetter();
         CsvToXlsParser.parse((short)5);
-        CsvToXlsParser.parse((short)15);
+        /*CsvToXlsParser.parse((short)15);
         CsvToXlsParser.parse((short)30);
         CsvToXlsParser.parse((short)60);
-        CsvToXlsParser.parse((short)240);
+        CsvToXlsParser.parse((short)240);*/
         buffer.quotations5 = getter.getHistoryOf((short)5);
-        buffer.quotations15 = getter.getHistoryOf((short)15);
+        buffer.showQuotations();
+        /*buffer.quotations15 = getter.getHistoryOf((short)15);
         buffer.quotations30 = getter.getHistoryOf((short)30);
         buffer.quotations60 = getter.getHistoryOf((short)60);
-        buffer.quotations240 = getter.getHistoryOf((short)240);
+        buffer.quotations240 = getter.getHistoryOf((short)240);*/
     }
 }

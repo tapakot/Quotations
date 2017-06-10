@@ -3,13 +3,14 @@ package buffer;
 import com.pretty_tools.dde.client.DDEClientEventListener;
 import common.Quotation;
 
-public class DDEListener implements DDEClientEventListener{
+class DDEListener implements DDEClientEventListener{
     private QuotationBuffer buffer;
     private Quotation changingQuo;
     private String[] partedResult;
 
     boolean trueData;
     private double prevBid; //for close parameter
+    private int prevMinute;
     private double maxAsk, maxBid, minAsk, minBid;
 
 
@@ -22,6 +23,7 @@ public class DDEListener implements DDEClientEventListener{
         changingQuo.low = 0;
         changingQuo.close = 0;
         partedResult = new String[3];
+        prevMinute = 0;
     }
 
     public void onDisconnect() {
@@ -37,7 +39,7 @@ public class DDEListener implements DDEClientEventListener{
             double ask = Double.parseDouble(partedResult[1]);
             int minute = Integer.parseInt(partedResult[2].substring(4));
             Quotation quo = new Quotation((short)5);
-            if((minute%5==0)){
+            if((minute%5==0)&&(prevMinute != minute)){
                 changingQuo.close = prevBid;
                 changingQuo.high = maxBid;
                 changingQuo.low = minBid;
@@ -61,6 +63,7 @@ public class DDEListener implements DDEClientEventListener{
                 if (ask > maxAsk){maxAsk=ask;}
                 if ((ask < minAsk)||(minAsk==0)){minAsk=ask;}
             }
+            prevMinute = minute;
             //System.out.print(minute + ": ");
             System.out.println(partedResult[0] + " " + partedResult[1] + " " + partedResult[2] + " " + itemIndex);
         }

@@ -7,7 +7,7 @@ import java.util.*;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 
-public class HistoryGetter {
+class HistoryGetter {
 
     public ArrayList<Quotation> getHistoryOf(short period){      //uses apache.POI to work with CLOSED excel files
         ArrayList<Quotation> list = new ArrayList<>();
