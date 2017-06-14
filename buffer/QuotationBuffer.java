@@ -13,6 +13,7 @@ public class QuotationBuffer {
     volatile ArrayList<Quotation> quotations240;
     private int counter;//used by real-time thread
     public boolean isReady;
+    public boolean trueData;
     Worker worker;
 
     public QuotationBuffer(){
@@ -57,6 +58,7 @@ public class QuotationBuffer {
     void realTimeEvent(Quotation quo){
         counter += quo.period;
         changeBuffer(quo);
+        showQuotations();
         worker.realTimeEvent();
         if(counter == 240){
             counter = 0;
@@ -65,23 +67,29 @@ public class QuotationBuffer {
 
     private void changeBuffer(Quotation quo){
         if(counter%5==0){
-            quotations5.remove(0);
-            quotations5.add(quo);
+            if (trueData==true){quotations5.remove(0);} else{quotations5.remove(99);}
+            //quotations5.add(quo); //передается объект, а не его содержимое. при изменении объекта поменяется и буфер
+            Quotation q = new Quotation();
+            q.close=quo.close;
+            q.open=quo.open;
+            q.high=quo.high;
+            q.low = quo.low;
+            quotations5.add(q);
         }
         if(counter%15==0){
-            quotations15.remove(0);
+            if (trueData==true){quotations15.remove(0);} else{quotations15.remove(99);}
             quotations15.add(quo);
         }
         if(counter%30==0){
-            quotations30.remove(0);
+            if (trueData==true){quotations30.remove(0);} else{quotations30.remove(99);}
             quotations30.add(quo);
         }
         if(counter%60==0){
-            quotations60.remove(0);
+            if (trueData==true){quotations60.remove(0);} else{quotations60.remove(99);}
             quotations60.add(quo);
         }
         if(counter%240==0){
-            quotations240.remove(0);
+            if (trueData==true){quotations240.remove(0);} else{quotations240.remove(99);}
             quotations240.add(quo);
         }
     }

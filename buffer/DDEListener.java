@@ -8,7 +8,6 @@ class DDEListener implements DDEClientEventListener{
     private Quotation changingQuo;
     private String[] partedResult;
 
-    boolean trueData;
     private double prevBid; //for close parameter
     private int prevMinute;
     private double maxAsk, maxBid, minAsk, minBid;
@@ -16,11 +15,13 @@ class DDEListener implements DDEClientEventListener{
 
     public DDEListener(QuotationBuffer buffer){
         this.buffer = buffer;
-        trueData = false; //because starts between 5-min moments
+        buffer.trueData = false; //because starts between 5-min moments
         changingQuo = new Quotation((short)5);
-        changingQuo.open = 0;
-        changingQuo.high = 0;
-        changingQuo.low = 0;
+        changingQuo.open = buffer.getQuotation((short)5, 99).open;
+        changingQuo.high = buffer.getQuotation((short)5, 99).high;
+        maxBid = changingQuo.high;
+        changingQuo.low = buffer.getQuotation((short)5, 99).low;
+        minBid = changingQuo.low;
         changingQuo.close = 0;
         partedResult = new String[3];
         prevMinute = 0;
@@ -40,32 +41,29 @@ class DDEListener implements DDEClientEventListener{
             int minute = Integer.parseInt(partedResult[2].substring(4));
             Quotation quo = new Quotation((short)5);
             if((minute%5==0)&&(prevMinute != minute)){
-                changingQuo.close = prevBid;
-                changingQuo.high = maxBid;
+                changingQuo.close = prevBid; //изменился
+                changingQuo.high = maxBid; //
                 changingQuo.low = minBid;
-                prevBid = bid;
                 System.out.println("for 5 minutes: \nmax/minBid: "+ maxBid+"/"+minBid+"\nmax/minAsk: "+ maxAsk+"/"+minAsk);
-                if(trueData){
-                    System.out.println("\n*** ATTENTION: counting was started between 5-min moments. Unpredictable open, high and low params ***\n");
-                    buffer.realTimeEvent(changingQuo);
-                }
-                trueData = true;
+
+                    //System.out.println("\n*** ATTENTION: counting was started between 5-min moments. Unpredictable open, high and low params ***\n");
+                buffer.realTimeEvent(changingQuo);
+                buffer.trueData = true;
                 maxAsk=0;
                 maxBid=0;
                 minAsk=0;
                 minBid=0;
                 changingQuo.open = bid;
-                //prevMinute = minute;
             }
             else {
-                if (bid > maxBid){maxBid=bid;}
-                if ((bid < minBid)||(minBid == 0)){minBid=bid;}
+                if (bid > maxBid){maxBid=bid; System.out.println("max: "+ maxBid);}
+                if ((bid < minBid)||(minBid == 0)){minBid=bid; System.out.println("min: "+ minBid);}
                 if (ask > maxAsk){maxAsk=ask;}
                 if ((ask < minAsk)||(minAsk==0)){minAsk=ask;}
             }
             prevMinute = minute;
-            //System.out.print(minute + ": ");
-            System.out.println(partedResult[0] + " " + partedResult[1] + " " + partedResult[2] + " " + itemIndex);
+            prevBid = bid;
+            //System.out.println(partedResult[0] + " " + partedResult[1] + " " + partedResult[2] + " " + itemIndex);
         }
     }
 }

@@ -31,7 +31,7 @@ class GraphCanvas extends JPanel{
         buffer = MainFrame.buffer;
         Quotations = new ArrayList<>();
         for(int i= 0; i<30; i++){       //should be changed by realTimeEvent
-            Quotations.add(buffer.getQuotation((short)5, 100-30+i));
+            Quotations.add(buffer.getQuotation((short)5, 100-30+i-1)); //30 but not last one (unpredictable)
         }
         /*for(int i = 0; i<30; i++){
             System.out.println("Graph["+ i +"]: "+ Quotations.get(i));
