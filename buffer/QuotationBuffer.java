@@ -33,7 +33,7 @@ public class QuotationBuffer {
         realTimeThread.start();
     }
 
-    public Quotation getQuotation(short period, int index){
+    synchronized public Quotation getQuotation(short period, int index){
         Quotation quo = new Quotation();
         switch (period){
             case 5:
@@ -95,8 +95,10 @@ public class QuotationBuffer {
     }
 
     void showQuotations(){
+        int i = 0;
         for (Quotation q : quotations5){
-            System.out.println(q.period+" "+q.open+" "+q.high+" "+q.low+" "+q.close);
+            System.out.println(i+" "+ q.period+" "+q.open+" "+q.high+" "+q.low+" "+q.close);
+            i++;
         }
         System.out.println("===========================================================================================");
         /*for (Quotation q : quotations15){

@@ -5,6 +5,7 @@ import buffer.QuotationBuffer;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class MainFrame extends JFrame{
     static QuotationBuffer buffer;
@@ -38,4 +39,11 @@ public class MainFrame extends JFrame{
         graphCanvas.repaint();
     }
 
+    public void drawExtremums(ArrayList maxs, ArrayList mins){
+        graphCanvas.drawExtremums(maxs, mins);
+    }
+
+    public void drawResLines(ArrayList resLines){
+        graphCanvas.drawResLines(resLines);
+    }
 }
