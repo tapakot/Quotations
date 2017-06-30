@@ -39,7 +39,8 @@ class DDEListener implements DDEClientEventListener{
             double bid = Double.parseDouble(partedResult[0]);
             double ask = Double.parseDouble(partedResult[1]);
             int minute = Integer.parseInt(partedResult[2].substring(4));
-            Quotation quo = new Quotation((short)5);
+            buffer.bid = bid;
+            buffer.ask = ask;
             if((minute%5==0)&&(prevMinute != minute)){
                 changingQuo.close = prevBid; //изменился
                 changingQuo.high = maxBid; //

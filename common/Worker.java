@@ -2,6 +2,7 @@ package common;
 
 import buffer.QuotationBuffer;
 import common.Quotation;
+import testing.HistoryTester;
 import ui.MainFrame;
 import analysis.Analyser;
 import ui.UiThread;
@@ -18,47 +19,33 @@ public class Worker {
         buffer = new QuotationBuffer();
         buffer.startThread(this);
         while (!buffer.isReady){}
-        Quotation quo =  buffer.getQuotation((short) 5, 99);
 
-        /*Thread ui = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                createGUI();
-            }
-        });*/
         UiThread ui = new UiThread(buffer);
         ui.start();
         do{}while (!ui.frameIsReady);
         frame = ui.getFrame();
-        /*SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run(){ createGUI(); }
-        });*/
 
         Analyser analyser = new Analyser();
-        analyser.setBuffer(buffer);
+        analyser.setQuotationBuffer(buffer);
         analyser.analyse("extremum");
+
+        //test
         System.out.println("maximums:");
-        for(int i = 0; i<analyser.maximums.size(); i++){
-            System.out.println(analyser.maximums.get(i));
+        for(int i = 0; i<analyser.getBuffer().maximums.size(); i++){
+            System.out.println(analyser.getBuffer().maximums.get(i));
         }
-        /*for(Double maximum : analyser.maximums){
-            System.out.println(maximum);
-        }*/
         System.out.println("minimums");
-        for(double minimum : analyser.minimums){
+        for(double minimum : analyser.getBuffer().minimums){
             System.out.println(minimum);
         }
 
-        frame.drawExtremums(analyser.maximums, analyser.minimums);
-        frame.drawResLines(analyser.exLines);
+        frame.drawExtremums(analyser.getBuffer().maximums, analyser.getBuffer().minimums);
+        frame.drawResLines(analyser.getBuffer().exLines);
 
+        HistoryTester tester = new HistoryTester(buffer);
+        System.out.println("balance after history test: " + tester.test());
     }
 
-    private void createGUI(){
-        frame = new MainFrame(buffer);
-        frame.setVisible(true); //ought to control visibility from main class
-    }
 
     public void realTimeEvent(){
         frame.realTimeEvent();

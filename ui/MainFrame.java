@@ -19,7 +19,7 @@ public class MainFrame extends JFrame{
 
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        super.setMinimumSize(new Dimension(600, 400));
+        super.setMinimumSize(new Dimension(750, 400));
         super.setPreferredSize(getMinimumSize());
 
         graphCanvas = new GraphCanvas();

@@ -8,8 +8,8 @@ public class ResistanceLine {
 
     ResistanceLine(double middle){
         this.middle = middle;
-        high = middle + 0.00015; //20?+ 15?~
-        low = middle - 0.00015;
+        high = middle + 0.00013; //20?+ 15?~+ 13?
+        low = middle - 0.00013;
         height = high-low;
     }
 

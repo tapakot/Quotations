@@ -10,6 +10,7 @@ import java.io.IOException;
 
 class RealTimeThread extends Thread{
     QuotationBuffer buffer;
+    HistoryGetter getter;
 
     void setBuffer(QuotationBuffer buffer){
         this.buffer = buffer;
@@ -50,13 +51,14 @@ class RealTimeThread extends Thread{
     }
 
     private void setHistory(){
-        HistoryGetter getter = new HistoryGetter();
+        getter = new HistoryGetter();
         CsvToXlsParser.parse((short)5);
         /*CsvToXlsParser.parse((short)15);
         CsvToXlsParser.parse((short)30);
         CsvToXlsParser.parse((short)60);
         CsvToXlsParser.parse((short)240);*/
         buffer.quotations5 = getter.getHistoryOf((short)5);
+        buffer.history = getter.getHistory();
         buffer.showQuotations();
         /*buffer.quotations15 = getter.getHistoryOf((short)15);
         buffer.quotations30 = getter.getHistoryOf((short)30);

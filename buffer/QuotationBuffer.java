@@ -6,17 +6,23 @@ import common.Worker;
 import java.util.ArrayList;
 
 public class QuotationBuffer {
+    public ArrayList<Quotation> history;
     volatile ArrayList<Quotation> quotations5;  //used by getQuotation() and realTimeEvent() which are different threads
     volatile ArrayList<Quotation> quotations15;
     volatile ArrayList<Quotation> quotations30;
     volatile ArrayList<Quotation> quotations60;
     volatile ArrayList<Quotation> quotations240;
+    volatile double bid;
+    volatile double ask;
     private int counter;//used by real-time thread
     public boolean isReady;
     public boolean trueData;
+    public int countHistory;
     Worker worker;
+    RealTimeThread realTimeThread;
 
     public QuotationBuffer(){
+        history = new ArrayList<>(); //getHistory() puts here first 100. needed only for history test
         quotations5 = new ArrayList<>();
         quotations15 = new ArrayList<>();
         quotations30 = new ArrayList<>();
@@ -28,7 +34,7 @@ public class QuotationBuffer {
 
     public void startThread(Worker worker){
         this.worker = worker;
-        RealTimeThread realTimeThread = new RealTimeThread();
+        realTimeThread = new RealTimeThread();
         realTimeThread.setBuffer(this);
         realTimeThread.start();
     }
@@ -76,6 +82,7 @@ public class QuotationBuffer {
             q.low = quo.low;
             quotations5.add(q);
         }
+        /*when all history files exist
         if(counter%15==0){
             if (trueData==true){quotations15.remove(0);} else{quotations15.remove(99);}
             quotations15.add(quo);
@@ -92,6 +99,7 @@ public class QuotationBuffer {
             if (trueData==true){quotations240.remove(0);} else{quotations240.remove(99);}
             quotations240.add(quo);
         }
+        */
     }
 
     void showQuotations(){
@@ -117,5 +125,17 @@ public class QuotationBuffer {
             System.out.println(q.period+" "+q.open+" "+q.high+" "+q.low+" "+q.close);
         }
         System.out.println("===========================================================================================");*/
+    }
+
+    public double getBid(){
+        return bid;
+    }
+
+    public double getAsk(){
+        return ask;
+    }
+
+    public Quotation getOne(short period, int index){
+        return realTimeThread.getter.getOne(period, index);
     }
 }
