@@ -22,7 +22,7 @@ public class QuotationBuffer {
     RealTimeThread realTimeThread;
 
     public QuotationBuffer(){
-        history = new ArrayList<>(); //getHistory() puts here first 100. needed only for history test
+        history = new ArrayList<>(); //getHistory() puts here first 100. needed only for history test (or the f*ck 10000)
         quotations5 = new ArrayList<>();
         quotations15 = new ArrayList<>();
         quotations30 = new ArrayList<>();

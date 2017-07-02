@@ -57,7 +57,7 @@ class HistoryGetter {
         catch (IOException e){System.out.println("!!! IOExeption while reading History !!!");}
         Sheet sheet = wb.getSheetAt(0);
         buffer.countHistory = sheet.getLastRowNum();
-        for(int rowNum = 0; rowNum <= 99; rowNum++){
+        for(int rowNum = 0; rowNum <= sheet.getLastRowNum(); rowNum++){
             Row row = sheet.getRow(rowNum);
             Quotation quo = new Quotation((short) 5);
             Cell cell = row.getCell(2);

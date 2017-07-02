@@ -4,6 +4,7 @@ import buffer.QuotationBuffer;
 import common.Quotation;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Analyser {
     QuotationBuffer buffer;
@@ -15,8 +16,7 @@ public class Analyser {
     private double exDiff4 = 1.00013; //difference between nearby in % for extremums 35?+ 20?+ 13?~
     private double exDiff2 = 1.00019; //40
 
-    public Analyser(ArrayList<Quotation> buffer100){
-        this.buffer100 = buffer100;
+    public Analyser(){
         anBuffer = new AnalyserBuffer();
         toAnalyse = new double[2][100];
     }
@@ -29,8 +29,16 @@ public class Analyser {
         }
     }
 
+    public void setQuotationBuffer(List<Quotation> buffer100){
+        for(int i=0; i<99; i++){
+            toAnalyse[0][i] = buffer100.get(i).high;
+            toAnalyse[1][i] = buffer100.get(i).low;
+        }
+    }
+
     public void analyse(String cmd){
-        //extremums
+
+        //extremes
         for(int i = 5; i<94; i++){ //0-4; 95-99 could not be interpreted as extremums
             boolean max = true;
             if(toAnalyse[0][i-4]*exDiff4 > toAnalyse[0][i]){ max = false;}
@@ -94,7 +102,8 @@ public class Analyser {
         return anBuffer;
     }
 
-    public void clear(AnalyserBuffer buffer){
-        buffer = null;
+    public void clearBuffer(){
+        anBuffer = new AnalyserBuffer();
     }
+
 }

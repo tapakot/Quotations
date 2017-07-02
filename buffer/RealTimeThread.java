@@ -58,7 +58,7 @@ class RealTimeThread extends Thread{
         CsvToXlsParser.parse((short)60);
         CsvToXlsParser.parse((short)240);*/
         buffer.quotations5 = getter.getHistoryOf((short)5);
-        buffer.history = getter.getHistory();
+        buffer.history = getter.getHistory(buffer);
         buffer.showQuotations();
         /*buffer.quotations15 = getter.getHistoryOf((short)15);
         buffer.quotations30 = getter.getHistoryOf((short)30);

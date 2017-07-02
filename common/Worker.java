@@ -43,7 +43,7 @@ public class Worker {
         frame.drawResLines(analyser.getBuffer().exLines);
 
         HistoryTester tester = new HistoryTester(buffer);
-        System.out.println("balance after history test: " + tester.test());
+        System.out.println("==================================balance after history test: " + tester.test());
     }
 
 
