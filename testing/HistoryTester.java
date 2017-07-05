@@ -9,13 +9,16 @@ import static common.ForexConstants.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/** Class needed to test a strategy on the history
+ * Manages the whole test.
+ */
 public class HistoryTester {
     QuotationBuffer buffer;
     double balance;
     ArrayList<Position> positions;
     ArrayList<Position> toClose;
 
+    /** initialisation */
     public HistoryTester(QuotationBuffer buffer){
         this.buffer = buffer;
         balance = START_BALANCE;
@@ -23,6 +26,7 @@ public class HistoryTester {
         toClose = new ArrayList<>();
     }
 
+    /** starts and manages test. returns the value of balance after test. */
     public double test(){
         //preparing
         Adviser adviser = new Adviser();
@@ -89,14 +93,17 @@ public class HistoryTester {
                 positions.remove(pos);
             }
             toClose.clear();
+            if(balance<=0){ return balance; }
         }
         return balance;
     }
 
+    /** imitates an opening */
     void openPosition(double price, int direction, int money){
         positions.add(new Position(price, direction, money));
     }
 
+    /** imitates a closing */
     void closePosition(Position posToClose){
         balance += posToClose.profit(buffer.getBid(), buffer.getAsk());
         toClose.add(posToClose);

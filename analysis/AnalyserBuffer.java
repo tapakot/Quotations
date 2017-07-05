@@ -2,11 +2,14 @@ package analysis;
 
 import java.util.ArrayList;
 
+/** Buffer with indicator values */
 public class AnalyserBuffer {
     public ArrayList<Double> maximums;
     public ArrayList<Double> minimums;
+    /** resistance lines calculated using extremes */
     public ArrayList<ResistanceLine> exLines;
 
+    /** initialising */
     public AnalyserBuffer(){
         maximums = new ArrayList<Double>();
         minimums = new ArrayList<Double>();

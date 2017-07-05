@@ -3,14 +3,19 @@ package ui;
 import analysis.ResistanceLine;
 import buffer.QuotationBuffer;
 import common.Quotation;
+import static common.ForexConstants.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+/** Canvas where graphics are drawn.
+ * Manages all painting on graphs.
+ */
 class GraphCanvas extends JPanel{
     Graphics2D g2d;
     QuotationBuffer buffer;
+    /** 100 last quotations (to draw) */
     ArrayList<Quotation> Quotations; //last
     ArrayList<Double> maxs;
     ArrayList<Double> mins;
@@ -30,13 +35,12 @@ class GraphCanvas extends JPanel{
     int spaceBetweenBars;
 
     //what to draw
-    boolean extremums_f;
+    /** flag. to draw or not */
+    boolean extremes_f;
+    /** flag. to draw or not */
     boolean resLines_f;
 
-
-    private static final int WIDTH_OF_BAR = 2*2 + 2;
-    private static final int gridPeriod = 18; //period of marks of the grid
-
+    /** initialisation */
     GraphCanvas(){
         buffer = MainFrame.buffer;
         Quotations = new ArrayList<>();
@@ -46,7 +50,7 @@ class GraphCanvas extends JPanel{
             Quotations.add(buffer.getQuotation((short)5, 100-countOfBars-1+i)); //in the end but not the last one (unpredictable)
         }
 
-        extremums_f = false;
+        extremes_f = false;
         resLines_f = false;
 
         /*for(int i = 0; i<30; i++){
@@ -54,6 +58,7 @@ class GraphCanvas extends JPanel{
         }*/
     }
 
+    /** paints everything on the separate graph. depends on flags *_f. */
     @Override
     protected void paintComponent(Graphics g) {
         height = getHeight();
@@ -165,7 +170,7 @@ class GraphCanvas extends JPanel{
             g2d.fillRect(x, getY(close)-1, 2, 2);
         }
 
-        if(extremums_f){
+        if(extremes_f){
             g2d.setColor(Color.CYAN);
             for(Double min : mins){
                 g2d.drawLine(0, getY(min), width, getY(min));
@@ -179,6 +184,7 @@ class GraphCanvas extends JPanel{
 
     }
 
+    /** rounds an argument. math. */
     double round(double d, int digitsAfterComma){
         int mult =1;
         for(int i=0; i<digitsAfterComma; i++){
@@ -190,14 +196,16 @@ class GraphCanvas extends JPanel{
         return d;
     }
 
+    /** returns Y value on canvas of the value given in pips */
     private int getY(double value){ //counting the Y for drawing lines by value of quotation
         int result;
         result = height-(int)(lengthOfPip*100000*(value-base));
         return result;
     }
 
-    void drawExtremums(ArrayList<Double> maxs, ArrayList<Double> mins){
-        extremums_f = true;
+    /** commands to repaint with extremes */
+    void drawExtremes(ArrayList<Double> maxs, ArrayList<Double> mins){
+        extremes_f = true;
         this.maxs = maxs;
         this.mins = mins;
         repaint();
@@ -209,6 +217,7 @@ class GraphCanvas extends JPanel{
         }*/
     }
 
+    /** commands to repaint with resistance lines. */
     void drawResLines(ArrayList<ResistanceLine> resLines){
         this.resLines = resLines;
         resLines_f = true;

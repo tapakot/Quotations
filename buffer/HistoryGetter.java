@@ -7,8 +7,12 @@ import java.util.*;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 
+/** Getter of history. Works with .xls files. */
 class HistoryGetter {
 
+    /** returns last 100 quotations of particular period.
+     * gets them from .xls file.
+     */
     ArrayList<Quotation> getHistoryOf(short period){      //uses apache.POI to work with CLOSED excel files
         ArrayList<Quotation> list = new ArrayList<>();
         String path = "res\\EURUSD"+ period+".xls";
@@ -44,6 +48,9 @@ class HistoryGetter {
         return list;
     }
 
+    /** returns all 5-min quotations.
+     * for history test. sets countHistory in buffer manager.
+     */
     ArrayList<Quotation> getHistory(QuotationBuffer buffer){
         ArrayList<Quotation> list = new ArrayList<>();
         String path = "res\\EURUSD5.xls";
@@ -78,6 +85,9 @@ class HistoryGetter {
         return list;
     }
 
+    /** returns any quotation from .xls file.
+     * needs too much time to execute.
+     */
     Quotation getOne(short period, int index){
         Quotation quo = new Quotation(period);
         String path = "res\\EURUSD"+ period+".xls";

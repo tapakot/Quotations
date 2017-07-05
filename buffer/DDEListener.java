@@ -3,6 +3,7 @@ package buffer;
 import com.pretty_tools.dde.client.DDEClientEventListener;
 import common.Quotation;
 
+/** listener class for DDE conversation */
 class DDEListener implements DDEClientEventListener{
     private QuotationBuffer buffer;
     private Quotation changingQuo;
@@ -12,7 +13,7 @@ class DDEListener implements DDEClientEventListener{
     private int prevMinute;
     private double maxAsk, maxBid, minAsk, minBid;
 
-
+    /** initialising */
     public DDEListener(QuotationBuffer buffer){
         this.buffer = buffer;
         buffer.trueData = false; //because starts between 5-min moments
@@ -27,10 +28,12 @@ class DDEListener implements DDEClientEventListener{
         prevMinute = 0;
     }
 
+    /** when disconnected. for ex.: file was closed by user. */
     public void onDisconnect() {
         System.out.println("=======================Disconnected from real-time quos===========================");
     }
 
+    /** when new data came */
     public void onItemChanged(String topic, String item, String data) { //item == R1C?
         item = item.substring(3);
         int itemIndex = Integer.parseInt(item)-2; //0-bid, 1-ask, 2-time

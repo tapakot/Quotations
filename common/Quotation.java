@@ -1,5 +1,6 @@
 package common;
 
+/** Represents a ForEx quotation. */
 public class Quotation {
     public double open = 0;
     public double high = 0;
@@ -7,6 +8,7 @@ public class Quotation {
     public double close = 0;
     public short period = 5;
 
+    /** creates a new one */
     public Quotation(double open, double high, double low, double close, short period){
         this.open = open;
         this.high = high;
@@ -15,10 +17,12 @@ public class Quotation {
         this.period = period;
     }
 
+    /** creates a new one with zero params*/
     public Quotation(short period){
         this.period = period;
     }
 
+    /** creates a new one  with zero params and a standard period (5) */
     public Quotation(){
         this.period = 5;
     }

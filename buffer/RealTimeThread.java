@@ -8,14 +8,17 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
+/** thread of quotation buffer. collects information from MetaTrader4. */
 class RealTimeThread extends Thread{
     QuotationBuffer buffer;
     HistoryGetter getter;
 
+    /** buffer to inform */
     void setBuffer(QuotationBuffer buffer){
         this.buffer = buffer;
     }
 
+    /** gets history (initialising buffer) and starts to collect new data */
     @Override
     public void run(){
         System.out.println("getting history");
@@ -23,6 +26,9 @@ class RealTimeThread extends Thread{
         realTime();
     }
 
+    /** Starts collecting real-time data.
+     * Opens excel file and starts DDE conversation. After that the buffer is ready.
+     */
     private void realTime(){
         //open Excel with real-time quotations
         Desktop dk = Desktop.getDesktop();
@@ -50,6 +56,7 @@ class RealTimeThread extends Thread{
         catch (DDEException e) {System.out.println("something went wrong in Real-Time Quos");}
     }
 
+    /** gets 100 quotations of all periods. Gets history all history for history test. Shows 5-min quotations. */
     private void setHistory(){
         getter = new HistoryGetter();
         CsvToXlsParser.parse((short)5);

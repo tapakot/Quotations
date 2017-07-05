@@ -3,26 +3,30 @@ package advicing;
 import analysis.Analyser;
 import analysis.AnalyserBuffer;
 import analysis.ResistanceLine;
-import buffer.QuotationBuffer;
 import common.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static common.ForexConstants.*;
 
-
+/** Class to get advice from */
 public class Adviser {
     Analyser analyser;
     AnalyserBuffer anBuffer;
     List<Quotation> history;
     Quotation quo; //new quotation
 
+    /** initialysation */
     public Adviser(){
         analyser = new Analyser();
         anBuffer = analyser.getBuffer();
     }
 
+    /** returns an advice in CONSTANT form.
+     * @param forAdvice100 history to be analysed
+     * @param quo a new quotation after which needed an advice
+     * @return
+     */
     public int getAdvice(List<Quotation> forAdvice100, Quotation quo){
         history = forAdvice100;
         this.quo = quo;
@@ -32,15 +36,16 @@ public class Adviser {
         anBuffer = analyser.getBuffer();
         int advice;
         int sum = summariseIndicators();
+        //ranges
         if(sum>0) {
-            if(sum > 1){
+            if(sum > UP_ADVICE_MIN_VALUE){
                 advice = ADVICE_UP;
             } else {
                 advice = ADVICE_CLOSE_DOWN;
             }
 
         } else if(sum<0){
-            if (sum < -1) {
+            if (sum < DOWN_ADVICE_MAX_VALUE) {
                 advice = ADVICE_DOWN;
             } else {
                 advice = ADVICE_CLOSE_UP;
@@ -51,6 +56,7 @@ public class Adviser {
         return advice;
     }
 
+    /** returns an integer value of advice. absolute value of the returned value is dependence of the advice */
     int summariseIndicators(){
         int result = 0;
         result += exLines();
@@ -58,6 +64,7 @@ public class Adviser {
         return result;
     }
 
+    /** returns an advice based on exLines indicator */
     int exLines(){ //what to do relying on extreme resistance lines
         int advice = ADVICE_STAY;
 

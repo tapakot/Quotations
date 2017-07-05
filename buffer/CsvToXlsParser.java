@@ -8,7 +8,14 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import java.io.*;
 import java.util.ArrayList;
 
+/** Parses .csv to .xls files.
+ * Not needed.
+ */
 class CsvToXlsParser {
+    /** main method.
+     * parses the file of particular period.
+     * @param period
+     */
     public static void parse(short period){
         ArrayList cells = null;
         ArrayList rows = new ArrayList();

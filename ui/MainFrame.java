@@ -7,10 +7,17 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.ArrayList;
 
+/** Main frame of User Interface.
+ * Manages all panes.
+ * All commands for panes (such as to draw or change info) should be send to MainFrame as a manager.
+ */
 public class MainFrame extends JFrame{
     static QuotationBuffer buffer;
     static GraphCanvas graphCanvas;
 
+    /** preparations and start.
+     * sets panes, Layout Manager and size.
+     */
     public MainFrame(QuotationBuffer buffer){
         super("Quotations");
 
@@ -29,20 +36,26 @@ public class MainFrame extends JFrame{
         pack();
     }
 
+    /** sets a Quotation Buffer to get data from (for drawing) */
     public void setQuotationBuffer(QuotationBuffer buffer){
         MainFrame.buffer = buffer;
     }
 
+    /** informs about new data.
+     * repaints with new quotations.
+     */
     public void realTimeEvent(){
         graphCanvas.Quotations.remove(0);
         graphCanvas.Quotations.add(buffer.getQuotation((short)5, 99));
         graphCanvas.repaint();
     }
 
-    public void drawExtremums(ArrayList maxs, ArrayList mins){
-        graphCanvas.drawExtremums(maxs, mins);
+    /** managing graph canvas. draws extremes. */
+    public void drawExtremes(ArrayList maxs, ArrayList mins){
+        graphCanvas.drawExtremes(maxs, mins);
     }
 
+    /** managing graph canvas. draws resistance lines */
     public void drawResLines(ArrayList resLines){
         graphCanvas.drawResLines(resLines);
     }
