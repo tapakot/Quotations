@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class MainFrame extends JFrame{
     static QuotationBuffer buffer;
     static GraphCanvas graphCanvas;
+    static PositionsPanel posPanel;
 
     /** preparations and start.
      * sets panes, Layout Manager and size.
@@ -26,11 +27,16 @@ public class MainFrame extends JFrame{
 
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        super.setMinimumSize(new Dimension(750, 400));
+        super.setMinimumSize(new Dimension(1000, 400));
         super.setPreferredSize(getMinimumSize());
 
+        Box center = Box.createHorizontalBox();
         graphCanvas = new GraphCanvas();
-        mainPanel.add(graphCanvas);
+        center.add(graphCanvas);
+        posPanel = new PositionsPanel(buffer);
+        center.add(posPanel);
+
+        mainPanel.add(center);
 
         setContentPane(mainPanel);
         pack();
@@ -59,4 +65,11 @@ public class MainFrame extends JFrame{
     public void drawResLines(ArrayList resLines){
         graphCanvas.drawResLines(resLines);
     }
+
+    /** managing panel of positions. sets new pos-s instead of old ones. */
+    public void setPositions(ArrayList pos){ posPanel.setPositions(pos); }
+
+    public void setBalance(double balance){ posPanel.setBalance(balance); }
+
+    public void newBid(){ posPanel.reCalc();}
 }

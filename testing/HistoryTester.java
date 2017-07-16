@@ -17,6 +17,8 @@ public class HistoryTester {
     double balance;
     ArrayList<Position> positions;
     ArrayList<Position> toClose;
+    int currentIndex;
+    ArrayList<Quotation> bufferAll;
 
     /** initialisation */
     public HistoryTester(QuotationBuffer buffer){
@@ -30,22 +32,23 @@ public class HistoryTester {
     public double test(){
         //preparing
         Adviser adviser = new Adviser();
-        int currentIndex = 100;//100
-        ArrayList<Quotation> bufferAll = buffer.history;
+        currentIndex = 100;//100
+        bufferAll = buffer.history;
         List<Quotation> buffer100 = bufferAll.subList(currentIndex-100, currentIndex);//in, ex
         Quotation currentQuo = bufferAll.get(currentIndex);
+
         int advice = adviser.getAdvice(buffer100, currentQuo);
         //handling
         if(advice==ADVICE_UP){
             for(Position pos : positions){
                 if(pos.direction == DOWN_DIRECTION){ closePosition(pos);}
             }
-            openPosition(buffer.getAsk(), UP_DIRECTION, 10);
+            openPosition(bufferAll.get(currentIndex+1).open, UP_DIRECTION, 100);
         } else if(advice == ADVICE_DOWN){
             for(Position pos : positions){
                 if(pos.direction == UP_DIRECTION){ closePosition(pos);}
             }
-            openPosition(buffer.getBid(), DOWN_DIRECTION, 10);
+            openPosition(bufferAll.get(currentIndex+1).open, DOWN_DIRECTION, 100);
         } else if(advice == ADVICE_CLOSE_DOWN){
             for(Position pos : positions){
                 if(pos.direction == DOWN_DIRECTION){ closePosition(pos);}
@@ -60,22 +63,26 @@ public class HistoryTester {
         }
         toClose.clear();
 
-        while(currentIndex < buffer.countHistory){
+        while(currentIndex < buffer.countHistory-1){
             currentIndex++;
             buffer100 = bufferAll.subList(currentIndex-100, currentIndex);
             currentQuo = bufferAll.get(currentIndex);
+            /* test
+            if(bufferAll.get(currentIndex+1).open == 1.13882){
+                int x = 1;
+            }*/
             advice = adviser.getAdvice(buffer100, currentQuo);
 
             if(advice==ADVICE_UP){
                 for(Position pos : positions){
                     if(pos.direction == DOWN_DIRECTION){ closePosition(pos);}
                 }
-                openPosition(currentQuo.close, UP_DIRECTION, 10);
+                openPosition(bufferAll.get(currentIndex+1).open, UP_DIRECTION, 30);
             } else if(advice == ADVICE_DOWN){
                 for(Position pos : positions){
                     if(pos.direction == UP_DIRECTION){ closePosition(pos);}
                 }
-                openPosition(currentQuo.close, DOWN_DIRECTION, 10);
+                openPosition(bufferAll.get(currentIndex+1).open, DOWN_DIRECTION, 30);
             } else if(advice == ADVICE_CLOSE_DOWN){
                 for(Position pos : positions){
                     if(pos.direction == DOWN_DIRECTION){ closePosition(pos);}
@@ -86,26 +93,46 @@ public class HistoryTester {
                 }
             }
             for (Position pos : positions) {
-                if (pos.profit(buffer.getBid(), buffer.getAsk()) > 1) {closePosition(pos);}
+                if (pos.profit(currentQuo.close, currentQuo.close) > TAKE_PROFIT) {
+                    closePosition(pos);
+                }
+                if (pos.profit(buffer.getBid(), buffer.getAsk()) > pos.takeProfit) {
+                    closePosition(pos);
+                }
+                if (pos.money + pos.profit(buffer.getBid(), buffer.getAsk()) <=0  ){
+                    closePosition(pos);
+                }
             }
             //closing
             for(Position pos : toClose){
                 positions.remove(pos);
             }
             toClose.clear();
-            if(balance<=0){ return balance; }
+            //if(balance<=0){ return balance; }
         }
         return balance;
     }
 
     /** imitates an opening */
     void openPosition(double price, int direction, int money){
-        positions.add(new Position(price, direction, money));
+        balance -= money;
+        System.out.print("Position opened at " + price+ " ("+(currentIndex+1)+")");
+        if(direction == UP_DIRECTION){System.out.print(" in UP direction.");}
+        else {System.out.print(" in DOWN direction.");}
+        System.out.println(" money: "+ money+ ". balance after opening: "+ balance);
+        positions.add(new Position(price, direction, money, 100));
+
+
     }
 
     /** imitates a closing */
-    void closePosition(Position posToClose){
-        balance += posToClose.profit(buffer.getBid(), buffer.getAsk());
-        toClose.add(posToClose);
+    void closePosition(Position posToClose){    // wrong!!!
+        if(currentIndex!=buffer.countHistory) {
+            double nextOpen = bufferAll.get(currentIndex + 1).open;
+            balance += posToClose.profit(nextOpen, nextOpen) + posToClose.money;
+            toClose.add(posToClose);
+            System.out.print("Position closed at " + nextOpen + ". was opened at " + posToClose.price + ". Profit: " + posToClose.profit(nextOpen, nextOpen));
+            System.out.println(" balance after closing: " + balance);
+        }
     }
 }

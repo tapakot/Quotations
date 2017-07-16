@@ -65,6 +65,9 @@ class DDEListener implements DDEClientEventListener{
                 if (ask > maxAsk){maxAsk=ask;}
                 if ((ask < minAsk)||(minAsk==0)){minAsk=ask;}
             }
+            if(buffer.test){
+                buffer.tester.newData();
+            }
             prevMinute = minute;
             prevBid = bid;
             //System.out.println(partedResult[0] + " " + partedResult[1] + " " + partedResult[2] + " " + itemIndex);

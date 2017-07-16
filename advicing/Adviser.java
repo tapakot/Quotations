@@ -15,8 +15,9 @@ public class Adviser {
     AnalyserBuffer anBuffer;
     List<Quotation> history;
     Quotation quo; //new quotation
+    double bid; //new bid
 
-    /** initialysation */
+    /** initialisation */
     public Adviser(){
         analyser = new Analyser();
         anBuffer = analyser.getBuffer();
@@ -34,9 +35,9 @@ public class Adviser {
         analyser.clearBuffer();
         analyser.analyse("extremes");
         anBuffer = analyser.getBuffer();
+
         int advice;
         int sum = summariseIndicators();
-        //ranges
         if(sum>0) {
             if(sum > UP_ADVICE_MIN_VALUE){
                 advice = ADVICE_UP;
@@ -54,6 +55,10 @@ public class Adviser {
             advice = ADVICE_STAY;
         }
         return advice;
+    }
+
+    public int getAdvice(List<Quotation> forAdvice100, double bid){
+        return getAdvice(forAdvice100, new Quotation(bid, bid, bid, bid, (short)5));
     }
 
     /** returns an integer value of advice. absolute value of the returned value is dependence of the advice */
@@ -80,13 +85,13 @@ public class Adviser {
             }
 
             //getting over up
-            if(quo.high > line.middle*1.10){
+            if(quo.high > line.middle*OVER_RES_LINE){
                 if((history.get(99).close < line.high)||(history.get(98).close < line.high)){
                     return ADVICE_CLOSE_DOWN;
                 }
             }
             //getting over down
-            if(quo.low < line.middle/1.10){
+            if(quo.low < line.middle/OVER_RES_LINE){
                 if((history.get(99).close > line.low)||(history.get(98).close > line.low)){
                     return ADVICE_CLOSE_UP;
                 }

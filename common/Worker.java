@@ -2,12 +2,14 @@ package common;
 
 import buffer.QuotationBuffer;
 import common.Quotation;
-import testing.HistoryTester;
+import testing.*;
 import ui.MainFrame;
 import analysis.Analyser;
 import ui.UiThread;
+import static common.ForexConstants.*;
 
 import javax.swing.*;
+import java.util.ArrayList;
 
 /** Worker manages work of some other classes.
  * One of the main classes.
@@ -59,7 +61,17 @@ public class Worker {
         //history test
         HistoryTester tester = new HistoryTester(buffer);
         System.out.println("==================================balance after history test: " + tester.test());
-    }
+
+        //testing ui part
+        /*ArrayList<Position> p = new ArrayList<>();
+        p.add(new Position(1.14, DOWN_DIRECTION, 10));
+        p.add(new Position(1.13943, DOWN_DIRECTION, 100));
+        ui.setPositions(p);*/
+
+        //real-time test
+        RealTimeTester rtTester = new RealTimeTester(buffer, ui);
+        rtTester.test();
+     }
 
     /** inform worker about new information from buffer. */
     public void realTimeEvent(){

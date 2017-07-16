@@ -42,6 +42,8 @@ class GraphCanvas extends JPanel{
 
     /** initialisation */
     GraphCanvas(){
+        setMinimumSize(new Dimension(700, 400));
+        setPreferredSize(getMinimumSize());
         buffer = MainFrame.buffer;
         Quotations = new ArrayList<>();
         countOfBars = 99;
@@ -204,7 +206,7 @@ class GraphCanvas extends JPanel{
     }
 
     /** commands to repaint with extremes */
-    void drawExtremes(ArrayList<Double> maxs, ArrayList<Double> mins){
+    void drawExtremes(ArrayList<Double> maxs, ArrayList<Double> mins){ //! true/false. analise just before repainting in paintComponent()
         extremes_f = true;
         this.maxs = maxs;
         this.mins = mins;

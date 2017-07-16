@@ -47,4 +47,11 @@ public class UiThread extends Thread {
     public void drawResLines(ArrayList resLines){
         frame.drawResLines(resLines);
     }
+
+    /** managing main frame. sets new pos-s instead of old ones. */
+    public void setPositions(ArrayList pos){ frame.setPositions(pos);}
+
+    public void setBalance(double balance){ frame.setBalance(balance);}
+
+    public void newBid(){ frame.newBid();}
 }

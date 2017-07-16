@@ -2,6 +2,7 @@ package buffer;
 
 import common.Quotation;
 import common.Worker;
+import testing.RealTimeTester;
 
 import java.util.ArrayList;
 
@@ -30,11 +31,16 @@ public class QuotationBuffer {
      */
     public boolean trueData;
 
+    /** flag. if to call RealTimeTester.newData() */
+    public boolean test;
+
     /** count of all known 5-min quotations. approximately 10.000. */
     public int countHistory;
 
     Worker worker;
+    public RealTimeTester tester;
     RealTimeThread realTimeThread;
+
 
     /** initialising */
     public QuotationBuffer(){
@@ -45,6 +51,8 @@ public class QuotationBuffer {
         quotations60 = new ArrayList<>();
         quotations240 = new ArrayList<>();
         counter = 0;
+        test = false;
+        tester = null;
         isReady = false;
     }
 
@@ -83,6 +91,22 @@ public class QuotationBuffer {
                 break;
         }
         return quo;
+    }
+
+    synchronized public ArrayList<Quotation> getQuotation(short period){
+        switch (period){
+            case 5:
+                return quotations5;
+            case 15:
+                return quotations15;
+            case 30:
+                return quotations30;
+            case 60:
+                return quotations60;
+            case 240:
+                return quotations240;
+        }
+        return null;
     }
 
     /** informs buffer manager about new data */
