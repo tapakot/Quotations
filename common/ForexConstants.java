@@ -14,10 +14,14 @@ public class ForexConstants {
     public static final int DOWN_DIRECTION = -1;
     public static final double COMMISSION = 0.04;
     public static final double TAKE_PROFIT = 1;
-    public static final double START_BALANCE = 5000;
+    public static final double START_BALANCE = 1000;
     public static final int UP_ADVICE_MIN_VALUE = 1; //if the value is bigger advices to open up positions
     public static final int DOWN_ADVICE_MAX_VALUE = -1;
+    public static final double CLOSE_DOWN_MIN_VALUE = 0.5;
+    public static final double CLOSE_UP_MAX_VALUE = -0.5;
     public static final double OVER_RES_LINE = 1.10;
+    public static final double EX_SENS_4 = 1.00013;// 35?+ 20?+ 13?~
+    public static final double EX_SENS_2 = 1.00019;//defines sensitivity to extremes
 
     public static final int WIDTH_OF_BAR = 2*2 + 2;
     public static final int gridPeriod = 18; //period of marks of the grid

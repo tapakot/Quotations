@@ -8,11 +8,10 @@ import static common.ForexConstants.*;
 
 /** Represents a ForEx position.  */
 public class Position {
-
     public int direction;
     public int money;
     public double price;
-    public double stopLoss;
+    public double stopLoss = -50;    //in $
     public double takeProfit;
     public Date date;
     public double commission; //in $
@@ -80,8 +79,6 @@ public class Position {
         return dtfrmt.format(date);
     }
 
-
-
     double round(double d, int digitsAfterComma){
         int mult =1;
         for(int i=0; i<digitsAfterComma; i++){
@@ -92,5 +89,4 @@ public class Position {
         d = (double) i/mult;
         return d;
     }
-
 }

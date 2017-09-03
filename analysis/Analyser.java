@@ -6,6 +6,8 @@ import common.Quotation;
 import java.util.ArrayList;
 import java.util.List;
 
+import static common.ForexConstants.*;
+
 /** Main class of the package.
  * An analyser itself. Needed to analyse history.
  * Sets the values of indicators which are put in buffer.
@@ -13,12 +15,7 @@ import java.util.List;
 public class Analyser {
     QuotationBuffer buffer;
     AnalyserBuffer anBuffer;
-    ArrayList<Quotation> buffer100;
     double[][] toAnalyse; // [highs][lows]
-
-    //defines sensitivity to extremes
-    private double exDiff4 = 1.00013; //difference between nearby in % for extremums 35?+ 20?+ 13?~
-    private double exDiff2 = 1.00019; //40
 
     /** initialisation */
     public Analyser(){
@@ -45,66 +42,87 @@ public class Analyser {
 
     /** sets all indicators in buffer */
     public void analyse(String cmd){
+        switch(cmd){
+            case "extremes": analyseForExtremes();
+                break;
+            case "trendLines": analyseForTrendLines();
+                break;
+        }
+    }
 
-        //extremes
-        for(int i = 5; i<94; i++){ //0-4; 95-99 could not be interpreted as extremums
+    public void analyse(){
+        analyseForExtremes();
+        analyseForTrendLines();
+    }
+
+    private void analyseForExtremes() {
+        for (int i = 5; i < 94; i++) { //0-4; 95-99 could not be interpreted as extremes
             boolean max = true;
-            if(toAnalyse[0][i-4]*exDiff4 > toAnalyse[0][i]){ max = false;}
-            if(toAnalyse[0][i+4]*exDiff4 > toAnalyse[0][i]){ max = false;}
-            if(toAnalyse[0][i-2]*exDiff2 < toAnalyse[0][i]){
-                if(toAnalyse[0][i+2]*exDiff2 < toAnalyse[0][i]){ max = true;}
+            if (toAnalyse[0][i - 4] * EX_SENS_4 > toAnalyse[0][i]) {
+                max = false;
             }
-            for(int j=i-5; j<i+6; j++){
-                if(toAnalyse[0][j]>toAnalyse[0][i]){
+            if (toAnalyse[0][i + 4] * EX_SENS_4 > toAnalyse[0][i]) {
+                max = false;
+            }
+            if (toAnalyse[0][i - 2] * EX_SENS_2 < toAnalyse[0][i]) {
+                if (toAnalyse[0][i + 2] * EX_SENS_2 < toAnalyse[0][i]) {
+                    max = true;
+                }
+            }
+            for (int j = i - 5; j < i + 6; j++) {
+                if (toAnalyse[0][j] > toAnalyse[0][i]) {
                     max = false;
                 }
             }
-            if(max){
+            if (max) {
                 anBuffer.maximums.add(toAnalyse[0][i]);
                 boolean covered = false;
-                for(ResistanceLine line : anBuffer.exLines){
-                    if(line.isCoveringError(toAnalyse[0][i])){ covered = true; }
+                for (ResistanceLine line : anBuffer.exLines) {
+                    if (line.isCoveringError(toAnalyse[0][i])) {
+                        covered = true;
+                    }
                 }
-                if(!covered){ anBuffer.exLines.add(new ResistanceLine(toAnalyse[0][i])); }
+                if (!covered) {
+                    anBuffer.exLines.add(new ResistanceLine(toAnalyse[0][i]));
+                }
             }
 
             boolean min = true;
-            if(toAnalyse[1][i-4]/exDiff4 < toAnalyse[1][i]){ min = false;}
-            if(toAnalyse[1][i+4]/exDiff4 < toAnalyse[1][i]){ min = false;}
-            if(toAnalyse[1][i-2]/exDiff2 > toAnalyse[1][i]){
-                if(toAnalyse[1][i+2]/exDiff2 > toAnalyse[1][i]){ min = true;}
+            if (toAnalyse[1][i - 4] / EX_SENS_4 < toAnalyse[1][i]) {
+                min = false;
             }
-            for(int j=i-5; j<i+6; j++){
-                if(toAnalyse[1][j]<toAnalyse[1][i]){
+            if (toAnalyse[1][i + 4] / EX_SENS_4 < toAnalyse[1][i]) {
+                min = false;
+            }
+            if (toAnalyse[1][i - 2] / EX_SENS_2 > toAnalyse[1][i]) {
+                if (toAnalyse[1][i + 2] / EX_SENS_2 > toAnalyse[1][i]) {
+                    min = true;
+                }
+            }
+            for (int j = i - 5; j < i + 6; j++) {
+                if (toAnalyse[1][j] < toAnalyse[1][i]) {
                     min = false;
                 }
             }
-            if(min){
+            if (min) {
                 anBuffer.minimums.add(toAnalyse[1][i]);
                 boolean covered = false;
-                for(ResistanceLine line : anBuffer.exLines){
-                    if(line.isCoveringError(toAnalyse[1][i])){ covered = true; }
-                }
-                if(!covered){ anBuffer.exLines.add(new ResistanceLine(toAnalyse[1][i])); }
-            }
-            /*if((toAnalyse[0][i-1]>toAnalyse[0][i-2])&&(toAnalyse[0][i]>toAnalyse[0][i-1])&&(toAnalyse[0][i+1]<toAnalyse[0][i])&&(toAnalyse[0][i+2]<toAnalyse[0][i+1])){ //highs
-                if((toAnalyse[1][i-1]>toAnalyse[1][i-2])&&(toAnalyse[1][i]>toAnalyse[1][i-1])&&(toAnalyse[1][i+1]<toAnalyse[1][i])&&(toAnalyse[1][i+2]<toAnalyse[1][i+1])) {//lows
-                    //i is maximum
-                    maximums.add(toAnalyse[0][i]); //high added
-                }
-            } else {
-                if((toAnalyse[0][i-1]*exDiff < toAnalyse[0][i])&&(toAnalyse[0][i+1]*exDiff < toAnalyse[0][i])){
-                    //i is maximum
-                    maximums.add(toAnalyse[0][i]); //high added
-                } else {
-                    if((toAnalyse[0][i-2]*exDiff2 < toAnalyse[0][i])&&(toAnalyse[0][i+2]*exDiff2 < toAnalyse[0][i])) {
-                        //i is maximum
-                        maximums.add(toAnalyse[0][i]); //high added
+                for (ResistanceLine line : anBuffer.exLines) {
+                    if (line.isCoveringError(toAnalyse[1][i])) {
+                        covered = true;
                     }
                 }
-            }*/
+                if (!covered) {
+                    anBuffer.exLines.add(new ResistanceLine(toAnalyse[1][i]));
+                }
+            }
         }
     }
+
+    public void analyseForTrendLines(){
+
+    }
+
 
     /** returns a buffer with values of indicators */
     public AnalyserBuffer getBuffer(){
@@ -113,7 +131,7 @@ public class Analyser {
 
     /** clears all indicators. preparation for analysing new collection of quotations */
     public void clearBuffer(){
-        anBuffer = new AnalyserBuffer();
+        anBuffer.clean();
     }
 
 }

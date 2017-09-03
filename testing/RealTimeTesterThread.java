@@ -1,6 +1,7 @@
 package testing;
 
 import advicing.Adviser;
+import analysis.AnalyserBuffer;
 import buffer.QuotationBuffer;
 import common.Position;
 import ui.UiThread;
@@ -18,6 +19,7 @@ class RealTimeTesterThread extends Thread {
     QuotationBuffer buffer;
     UiThread ui;
     Adviser advicer;
+    AnalyserBuffer anBuffer;
     RealTimeTester tester;
     ArrayList<Position> positions;
     ArrayList<Position> toClose;
@@ -34,6 +36,9 @@ class RealTimeTesterThread extends Thread {
         toClose = new ArrayList<>();
         oldDate = new Date(0);
         balance = START_BALANCE;
+        anBuffer = advicer.getAnBuffer();
+        ui.drawExtremes(anBuffer.maximums, anBuffer.minimums);
+        ui.drawResLines(anBuffer.exLines);
     }
 
     @Override
@@ -58,7 +63,7 @@ class RealTimeTesterThread extends Thread {
                         closePosition(pos);
                     }
                 }
-                openPosition(buffer.getBid(), UP_DIRECTION, 30);
+                openPosition(buffer.getBid(), UP_DIRECTION, 100);
                 oldDate = date;
             } else if (advice == ADVICE_DOWN) {
                 for (Position pos : positions) {
@@ -66,7 +71,7 @@ class RealTimeTesterThread extends Thread {
                         closePosition(pos);
                     }
                 }
-                openPosition(buffer.getBid(), DOWN_DIRECTION, 30);
+                openPosition(buffer.getBid(), DOWN_DIRECTION, 100);
                 oldDate = date;
             } else if (advice == ADVICE_CLOSE_DOWN) {
                 for (Position pos : positions) {
@@ -90,6 +95,9 @@ class RealTimeTesterThread extends Thread {
                 closePosition(pos);
             }
             if (pos.money + pos.profit(buffer.getBid(), buffer.getAsk()) <=0  ){
+                closePosition(pos);
+            }
+            if (pos.profit(buffer.getBid(), buffer.getAsk()) + pos.stopLoss <=0){
                 closePosition(pos);
             }
         }

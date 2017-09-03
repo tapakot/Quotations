@@ -23,6 +23,10 @@ public class Adviser {
         anBuffer = analyser.getBuffer();
     }
 
+    public AnalyserBuffer getAnBuffer(){
+        return anBuffer;
+    }
+
     /** returns an advice in CONSTANT form.
      * @param forAdvice100 history to be analysed
      * @param quo a new quotation after which needed an advice
@@ -33,23 +37,27 @@ public class Adviser {
         this.quo = quo;
         analyser.setQuotationBuffer(forAdvice100);
         analyser.clearBuffer();
-        analyser.analyse("extremes");
+        analyser.analyse();
         anBuffer = analyser.getBuffer();
 
-        int advice;
+        int advice = ADVICE_STAY;
         int sum = summariseIndicators();
-        if(sum>0) {
-            if(sum > UP_ADVICE_MIN_VALUE){
-                advice = ADVICE_UP;
-            } else {
-                advice = ADVICE_CLOSE_DOWN;
-            }
 
-        } else if(sum<0){
-            if (sum < DOWN_ADVICE_MAX_VALUE) {
-                advice = ADVICE_DOWN;
+        if(sum>0) {
+            if(sum >= UP_ADVICE_MIN_VALUE){
+                advice = ADVICE_UP;
+            } else if (sum >= CLOSE_DOWN_MIN_VALUE){
+                advice = ADVICE_CLOSE_DOWN;
             } else {
+                advice = ADVICE_STAY;
+            }
+        } else if(sum<0){
+            if (sum <= DOWN_ADVICE_MAX_VALUE) {
+                advice = ADVICE_DOWN;
+            } else if (sum <= CLOSE_UP_MAX_VALUE){
                 advice = ADVICE_CLOSE_UP;
+            } else {
+                advice = ADVICE_STAY;
             }
         } else {
             advice = ADVICE_STAY;
@@ -76,24 +84,30 @@ public class Adviser {
         boolean inALine = false;
         boolean fromUp = false;
         for(ResistanceLine line : anBuffer.exLines){
-            //resistance
-            if(line.isCoveringError(quo.close) && !line.isCoveringError(history.get(99).close) && !line.isCoveringError(history.get(98).close)){
-                inALine = true;
-                if(history.get(99).close > quo.close){
-                    fromUp = true;
-                }
-            }
-
             //getting over up
             if(quo.high > line.middle*OVER_RES_LINE){
                 if((history.get(99).close < line.high)||(history.get(98).close < line.high)){
                     return ADVICE_CLOSE_DOWN;
                 }
             }
+            //commented because of better work
+            /*if((history.get(98).close < line.high)&&(history.get(99).close >= line.high)&&(quo.close >= line.high)){
+                return ADVICE_CLOSE_DOWN;
+            }*/
             //getting over down
             if(quo.low < line.middle/OVER_RES_LINE){
                 if((history.get(99).close > line.low)||(history.get(98).close > line.low)){
                     return ADVICE_CLOSE_UP;
+                }
+            }
+            /*if((history.get(98).close > line.low)&&(history.get(99).close <= line.low)&&(quo.close <= line.low)){
+                return ADVICE_CLOSE_UP;
+            }*/
+            //resistance
+            if(line.isCovering(quo.close) && !line.isCoveringError(history.get(99).close) && !line.isCoveringError(history.get(98).close)){
+                inALine = true;
+                if(history.get(99).close > quo.close){
+                    fromUp = true;
                 }
             }
         }

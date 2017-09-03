@@ -39,7 +39,7 @@ public class Worker {
         do{}while (!ui.frameIsReady);
         frame = ui.getFrame();
 
-        //start analyser. FOR TESTS ONLY
+        /*//start analyser. FOR TESTS ONLY
         Analyser analyser = new Analyser();
         analyser.setQuotationBuffer(buffer);
         analyser.analyse("extremum");
@@ -52,11 +52,7 @@ public class Worker {
         System.out.println("minimums:");
         for(double minimum : analyser.getBuffer().minimums){
             System.out.println(minimum);
-        }
-
-        //managing UI
-        ui.drawExtremes(analyser.getBuffer().maximums, analyser.getBuffer().minimums);
-        ui.drawResLines(analyser.getBuffer().exLines);
+        }*/
 
         //history test
         HistoryTester tester = new HistoryTester(buffer);
@@ -67,6 +63,10 @@ public class Worker {
         p.add(new Position(1.14, DOWN_DIRECTION, 10));
         p.add(new Position(1.13943, DOWN_DIRECTION, 100));
         ui.setPositions(p);*/
+
+
+        /*ui.drawExtremes(analyser.getBuffer().maximums, analyser.getBuffer().minimums);
+        ui.drawResLines(analyser.getBuffer().exLines);*/
 
         //real-time test
         RealTimeTester rtTester = new RealTimeTester(buffer, ui);

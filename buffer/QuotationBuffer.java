@@ -13,21 +13,23 @@ import java.util.ArrayList;
 public class QuotationBuffer {
     /** collection of all known 5-minute quotations. used for history test. ought to be cleared after test. */
     public ArrayList<Quotation> history;
-
     volatile ArrayList<Quotation> quotations5;  //used by getQuotation() and realTimeEvent() which are different threads
+    volatile double bid;
+    volatile double ask;
+    private int counter;//used by real-time thread
+
+    /*
     volatile ArrayList<Quotation> quotations15;
     volatile ArrayList<Quotation> quotations30;
     volatile ArrayList<Quotation> quotations60;
     volatile ArrayList<Quotation> quotations240;
-    volatile double bid;
-    volatile double ask;
-    private int counter;//used by real-time thread
+    */
 
     /** flag. true when buffer is initialised and ready to be used. */
     public boolean isReady;
 
     /** flag. true when last quotation is real.
-     * it may be not real because updating every 5 minutes. if 5 minutes have not passed, last quotation is wrong wrong.
+     * it may be not real because updating every 5 minutes. if 5 minutes have not passed, last quotation is wrong.
      */
     public boolean trueData;
 
@@ -46,14 +48,11 @@ public class QuotationBuffer {
     public QuotationBuffer(){
         history = new ArrayList<>(); //getHistory() puts here first 100. needed only for history test (or the f*ck 10000)
         quotations5 = new ArrayList<>();
-        quotations15 = new ArrayList<>();
-        quotations30 = new ArrayList<>();
-        quotations60 = new ArrayList<>();
-        quotations240 = new ArrayList<>();
         counter = 0;
         test = false;
         tester = null;
         isReady = false;
+        trueData = false;
     }
 
     /** starts buffer.
@@ -77,18 +76,6 @@ public class QuotationBuffer {
             case 5:
                 quo = quotations5.get(index);
                 break;
-            case 15:
-                quo = quotations15.get(index);
-                break;
-            case 30:
-                quo = quotations30.get(index);
-                break;
-            case 60:
-                quo = quotations60.get(index);
-                break;
-            case 240:
-                quo = quotations240.get(index);
-                break;
         }
         return quo;
     }
@@ -97,14 +84,6 @@ public class QuotationBuffer {
         switch (period){
             case 5:
                 return quotations5;
-            case 15:
-                return quotations15;
-            case 30:
-                return quotations30;
-            case 60:
-                return quotations60;
-            case 240:
-                return quotations240;
         }
         return null;
     }

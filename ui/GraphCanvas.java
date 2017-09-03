@@ -211,12 +211,7 @@ class GraphCanvas extends JPanel{
         this.maxs = maxs;
         this.mins = mins;
         repaint();
-        /*if(extremums){
-            g2d.setColor(Color.RED);
-            for(Double min : mins){
-                g2d.drawLine(0, getY(min), width, getY(min));
-            }
-        }*/
+
     }
 
     /** commands to repaint with resistance lines. */
