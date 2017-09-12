@@ -1,17 +1,21 @@
 package analysis;
 
+import static common.ForexConstants.RES_LINE_SENS;
+
 /** Represents a resistance line indicator */
 public class ResistanceLine {
     public double high;
     public double low;
     public double middle;
     public double height;
+    public int index;
 
     /** creates new one */
-    ResistanceLine(double middle){
+    ResistanceLine(double middle, int index){
         this.middle = middle;
-        high = middle + 0.00013; //20?+ 15?~+ 13?
-        low = middle - 0.00013;
+        this.index = index;
+        high = middle + RES_LINE_SENS;
+        low = middle - RES_LINE_SENS;
         height = high-low;
     }
 

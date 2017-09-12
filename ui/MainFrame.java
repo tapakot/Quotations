@@ -66,6 +66,8 @@ public class MainFrame extends JFrame{
         graphCanvas.drawResLines(resLines);
     }
 
+    public void drawTrendLines(ArrayList trLines) { graphCanvas.drawTrendLines(trLines);}
+
     /** managing panel of positions. sets new pos-s instead of old ones. */
     public void setPositions(ArrayList pos){ posPanel.setPositions(pos); }
 

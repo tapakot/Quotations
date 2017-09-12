@@ -19,6 +19,8 @@ public class HistoryTester {
     private ArrayList<Position> toClose;
     private int currentIndex;
     private ArrayList<Quotation> bufferAll;
+    private int upCounter;
+    private int downCounter;
 
     /** initialisation */
     public HistoryTester(QuotationBuffer buffer){
@@ -26,6 +28,8 @@ public class HistoryTester {
         balance = START_BALANCE;
         positions = new ArrayList<Position>();
         toClose = new ArrayList<>();
+        upCounter = 0; //to not make positions too frequently
+        downCounter = 0;
     }
 
     /** starts and manages test. returns the value of balance after test. */
@@ -45,20 +49,26 @@ public class HistoryTester {
             //handling
             switch (advice) {
                 case ADVICE_UP:
-                    for (Position pos : positions) {
-                        if (pos.direction == DOWN_DIRECTION) {
-                            closePosition(pos, 1);
+                    if(upCounter == 0) {
+                        for (Position pos : positions) {
+                            if (pos.direction == DOWN_DIRECTION) {
+                                closePosition(pos, 1);
+                            }
                         }
+                        openPosition(nextOpen, UP_DIRECTION, 100);
+                        upCounter = UP_COUNTER;
                     }
-                    openPosition(nextOpen, UP_DIRECTION, 100);
                     break;
                 case ADVICE_DOWN:
-                    for (Position pos : positions) {
-                        if (pos.direction == UP_DIRECTION) {
-                            closePosition(pos, 1);
+                    if(downCounter == 0) {
+                        for (Position pos : positions) {
+                            if (pos.direction == UP_DIRECTION) {
+                                closePosition(pos, 1);
+                            }
                         }
+                        openPosition(nextOpen, DOWN_DIRECTION, 100);
+                        downCounter = DOWN_COUNTER;
                     }
-                    openPosition(nextOpen, DOWN_DIRECTION, 100);
                     break;
                 case ADVICE_CLOSE_UP:
                     for (Position pos : positions) {
@@ -94,6 +104,8 @@ public class HistoryTester {
             }
             toClose.clear();
             currentIndex++;
+            if(upCounter != 0) {upCounter--;}
+            if(downCounter != 0){downCounter--;}
         }
 
         bufferAll = null; //buffer.history becomes null

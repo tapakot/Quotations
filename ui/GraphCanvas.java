@@ -1,6 +1,7 @@
 package ui;
 
 import analysis.ResistanceLine;
+import analysis.TrendLine;
 import buffer.QuotationBuffer;
 import common.Quotation;
 import static common.ForexConstants.*;
@@ -20,6 +21,7 @@ class GraphCanvas extends JPanel{
     ArrayList<Double> maxs;
     ArrayList<Double> mins;
     ArrayList<ResistanceLine> resLines;
+    ArrayList<TrendLine> trLines;
 
     //1 pip = 0,00001;
     int height; //height of the visible canvas
@@ -39,6 +41,7 @@ class GraphCanvas extends JPanel{
     boolean extremes_f;
     /** flag. to draw or not */
     boolean resLines_f;
+    boolean trLines_f;
 
     /** initialisation */
     GraphCanvas(){
@@ -183,7 +186,18 @@ class GraphCanvas extends JPanel{
             }
         }
 
-
+        if(trLines_f){
+            g2d.setColor(Color.ORANGE);
+            int x1, x2, y1, y2;
+            for(TrendLine tl : trLines){
+                //from the 1st (first one) bar to the 99th (last one)
+                y1 = getY(tl.getY(1));
+                y2 = getY(tl.getY(99));
+                x1 = spaceBetweenBars + (barPeriod); //safe because X is always int
+                x2 = spaceBetweenBars + (barPeriod * 98);
+                g2d.drawLine(x1, y1, x2, y2);
+            }
+        }
     }
 
     /** rounds an argument. math. */
@@ -218,6 +232,12 @@ class GraphCanvas extends JPanel{
     void drawResLines(ArrayList<ResistanceLine> resLines){
         this.resLines = resLines;
         resLines_f = true;
+        repaint();
+    }
+
+    void drawTrendLines(ArrayList<TrendLine> trLines){
+        this.trLines = trLines;
+        trLines_f = true;
         repaint();
     }
 }

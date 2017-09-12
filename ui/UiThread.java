@@ -48,6 +48,10 @@ public class UiThread extends Thread {
         frame.drawResLines(resLines);
     }
 
+    public void drawTrendLines(ArrayList trLines) {
+        frame.drawTrendLines(trLines);
+    }
+
     /** managing main frame. sets new pos-s instead of old ones. */
     public void setPositions(ArrayList pos){ frame.setPositions(pos);}
 
