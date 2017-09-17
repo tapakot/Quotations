@@ -55,7 +55,7 @@ public class HistoryTester {
                                 closePosition(pos, 1);
                             }
                         }
-                        openPosition(nextOpen, UP_DIRECTION, 100);
+                        openPosition(nextOpen, UP_DIRECTION, (int)(balance*0.1));
                         upCounter = UP_COUNTER;
                     }
                     break;
@@ -66,7 +66,7 @@ public class HistoryTester {
                                 closePosition(pos, 1);
                             }
                         }
-                        openPosition(nextOpen, DOWN_DIRECTION, 100);
+                        openPosition(nextOpen, DOWN_DIRECTION, (int)(balance*0.1));
                         downCounter = DOWN_COUNTER;
                     }
                     break;

@@ -28,6 +28,14 @@ public class Worker {
      * manages UI, testers.
      */
     public void work(){
+        Settings settings = new Settings();
+        settings.setFromFile();
+        ForexConstants.applySettings();
+        //test
+        for(AdjustValue aValue : settings.adjustValues){
+            System.out.println(aValue.name+" = "+aValue.value);
+        }
+
         //start buffer. wait for it
         buffer = new QuotationBuffer();
         buffer.startThread(this);

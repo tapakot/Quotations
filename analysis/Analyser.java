@@ -2,6 +2,8 @@ package analysis;
 
 import buffer.QuotationBuffer;
 import common.Quotation;
+import common.Settings;
+import common.Settings.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -241,7 +243,7 @@ public class Analyser {
         //loop 2. getting over deletion
         ArrayList<TrendLine> toDelete = new ArrayList<>();
         for(TrendLine tl : TLList){
-            for(int i = 0; i<100; i++){
+            for(int i = (int)tl.coordinates.get(0).getX(); i<100; i++){
                 if(tl.up){ //for up lines getting over down
                     //2nd closing
                     if((toAn.get(i).close < tl.getY(i))&&(!tl.isCovering(i, toAn.get(i).close))){

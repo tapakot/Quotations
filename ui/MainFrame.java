@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * All commands for panes (such as to draw or change info) should be send to MainFrame as a manager.
  */
 public class MainFrame extends JFrame{
-    static QuotationBuffer buffer;
+    QuotationBuffer buffer;
     static GraphCanvas graphCanvas;
     static PositionsPanel posPanel;
 
@@ -22,7 +22,7 @@ public class MainFrame extends JFrame{
     public MainFrame(QuotationBuffer buffer){
         super("Quotations");
 
-        MainFrame.buffer = buffer;
+        this.buffer = buffer;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -30,8 +30,11 @@ public class MainFrame extends JFrame{
         super.setMinimumSize(new Dimension(1000, 400));
         super.setPreferredSize(getMinimumSize());
 
+        MenuBar menuBar = new MenuBar(buffer);
+        setJMenuBar(menuBar);
+
         Box center = Box.createHorizontalBox();
-        graphCanvas = new GraphCanvas();
+        graphCanvas = new GraphCanvas(buffer);
         center.add(graphCanvas);
         posPanel = new PositionsPanel(buffer);
         center.add(posPanel);
@@ -44,7 +47,7 @@ public class MainFrame extends JFrame{
 
     /** sets a Quotation Buffer to get data from (for drawing) */
     public void setQuotationBuffer(QuotationBuffer buffer){
-        MainFrame.buffer = buffer;
+        this.buffer = buffer;
     }
 
     /** informs about new data.

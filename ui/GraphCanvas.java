@@ -44,10 +44,10 @@ class GraphCanvas extends JPanel{
     boolean trLines_f;
 
     /** initialisation */
-    GraphCanvas(){
+    GraphCanvas(QuotationBuffer buffer){
         setMinimumSize(new Dimension(700, 400));
         setPreferredSize(getMinimumSize());
-        buffer = MainFrame.buffer;
+        this.buffer = buffer;
         Quotations = new ArrayList<>();
         countOfBars = 99;
         for(int i= 0; i<countOfBars; i++){
@@ -191,9 +191,10 @@ class GraphCanvas extends JPanel{
             int x1, x2, y1, y2;
             for(TrendLine tl : trLines){
                 //from the 1st (first one) bar to the 99th (last one)
-                y1 = getY(tl.getY(1));
+                x1 = (int)tl.coordinates.get(0).getX(); //index of bar
+                y1 = getY(tl.getY(x1));
                 y2 = getY(tl.getY(99));
-                x1 = spaceBetweenBars + (barPeriod); //safe because X is always int
+                x1 = spaceBetweenBars + (barPeriod * x1); //x coord on the canvas
                 x2 = spaceBetweenBars + (barPeriod * 98);
                 g2d.drawLine(x1, y1, x2, y2);
             }
