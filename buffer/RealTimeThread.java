@@ -37,6 +37,9 @@ class RealTimeThread extends Thread{
             file = new File("res\\real-time.xls");
             dk.open(file);
         }catch(IOException e){e.printStackTrace();}
+        /*try{
+            Thread.sleep(10000);
+        }catch (InterruptedException e){}*/
 
         //dde
         try {

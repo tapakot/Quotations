@@ -1,6 +1,7 @@
 package common;
 
 import buffer.QuotationBuffer;
+import com.sun.awt.AWTUtilities;
 import common.Quotation;
 import testing.*;
 import ui.MainFrame;
@@ -9,6 +10,7 @@ import ui.UiThread;
 import static common.ForexConstants.*;
 
 import javax.swing.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 /** Worker manages work of some other classes.
@@ -29,8 +31,10 @@ public class Worker {
      */
     public void work(){
         Settings settings = new Settings();
-        settings.setFromFile();
+        settings.setFromFile(propFileName, Settings.properties);
+        settings.setFromFile(defPropFileName, Settings.defProperties);
         ForexConstants.applySettings();
+        Settings.setAdjustValues();
         //test
         for(AdjustValue aValue : settings.adjustValues){
             System.out.println(aValue.name+" = "+aValue.value);
@@ -47,15 +51,20 @@ public class Worker {
         do{}while (!ui.frameIsReady);
         frame = ui.getFrame();
 
+
         //start analyser. FOR TESTS ONLY
         Analyser analyser = new Analyser();
         analyser.setQuotationBuffer(buffer);
         analyser.analyse();
 
+        ui.drawExtremes(analyser.getBuffer().maximums, analyser.getBuffer().minimums);
+        ui.drawResLines(analyser.getBuffer().exLines);
+        ui.drawTrendLines(analyser.getBuffer().trendLines);
 
         //history test
-        HistoryTester tester = new HistoryTester(buffer);
+        /*HistoryTester tester = new HistoryTester(buffer);
         System.out.println("==================================balance after history test: " + tester.test());
+        */
 
         //testing ui part
         /*ArrayList<Position> p = new ArrayList<>();
@@ -63,10 +72,6 @@ public class Worker {
         p.add(new Position(1.13943, DOWN_DIRECTION, 100));
         ui.setPositions(p);*/
 
-
-        ui.drawExtremes(analyser.getBuffer().maximums, analyser.getBuffer().minimums);
-        ui.drawResLines(analyser.getBuffer().exLines);
-        ui.drawTrendLines(analyser.getBuffer().trendLines);
 
         //real-time test
         //RealTimeTester rtTester = new RealTimeTester(buffer, ui);

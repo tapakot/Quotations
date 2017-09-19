@@ -114,7 +114,7 @@ public class HistoryTester {
 
     /** imitates an opening */
     void openPosition(double price, int direction, int money){
-        if(balance - money >= 0) {
+        if((balance - money >= 0)&&(balance>=50)) {
             balance -= money;
             //informing output
             System.out.print("Position opened at " + price + " (" + (currentIndex + 1) + ")"); //open price of next quo
@@ -132,7 +132,7 @@ public class HistoryTester {
     }
 
     /** imitates a closing */
-    private void closePosition(Position posToClose, int cause){    // wrong!!!
+    private void closePosition(Position posToClose, int cause){    // wrong!!! (why?)
         if(currentIndex!=buffer.countHistory) { //right. countHistory from 0 as curIndex.
             double nextOpen = bufferAll.get(currentIndex + 1).open;
             double profit = 1;

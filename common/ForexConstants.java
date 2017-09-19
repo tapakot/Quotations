@@ -6,6 +6,7 @@ package common;
  */
 public class ForexConstants {
     public static final String propFileName = "res\\properties.ini";
+    public static final String defPropFileName = "res\\default properties.ini";
 
     //constants not to change
     public static final int UP_DIRECTION = 1;
@@ -52,15 +53,15 @@ public class ForexConstants {
         TREND_LINE_SENS = Double.parseDouble(Settings.properties.getProperty(sec+".TREND_LINE_SENS"));
 
         sec = "adviser";
-        UP_COUNTER = Integer.parseInt(Settings.properties.getProperty(sec + ".UP_COUNTER"));
-        DOWN_COUNTER = Integer.parseInt(Settings.properties.getProperty(sec+".DOWN_COUNTER"));
-        UP_ADVICE_MIN_VALUE = Integer.parseInt(Settings.properties.getProperty(sec+".UP_ADVICE_MIN_VALUE"));
-        DOWN_ADVICE_MAX_VALUE = Integer.parseInt(Settings.properties.getProperty(sec+".DOWN_ADVICE_MAX_VALUE"));
-        CLOSE_DOWN_MIN_VALUE = Integer.parseInt(Settings.properties.getProperty(sec+".CLOSE_DOWN_MIN_VALUE"));
-        CLOSE_UP_MAX_VALUE = Integer.parseInt(Settings.properties.getProperty(sec+".CLOSE_UP_MAX_VALUE"));
+        UP_COUNTER = (int)Double.parseDouble(Settings.properties.getProperty(sec + ".UP_COUNTER"));
+        DOWN_COUNTER = (int)Double.parseDouble(Settings.properties.getProperty(sec+".DOWN_COUNTER"));
+        UP_ADVICE_MIN_VALUE = (int)Double.parseDouble(Settings.properties.getProperty(sec+".UP_ADVICE_MIN_VALUE"));
+        DOWN_ADVICE_MAX_VALUE = (int)Double.parseDouble(Settings.properties.getProperty(sec+".DOWN_ADVICE_MAX_VALUE"));
+        CLOSE_DOWN_MIN_VALUE = (int)Double.parseDouble(Settings.properties.getProperty(sec+".CLOSE_DOWN_MIN_VALUE"));
+        CLOSE_UP_MAX_VALUE = (int)Double.parseDouble(Settings.properties.getProperty(sec+".CLOSE_UP_MAX_VALUE"));
         //coefficient of indicator for adviser
-        ADV_EX_LINES = Integer.parseInt(Settings.properties.getProperty(sec+".ADV_EX_LINES"));
-        ADV_TREND_LINES = Integer.parseInt(Settings.properties.getProperty(sec+".ADV_TREND_LINES"));
+        ADV_EX_LINES = (int)Double.parseDouble(Settings.properties.getProperty(sec+".ADV_EX_LINES"));
+        ADV_TREND_LINES = (int)Double.parseDouble(Settings.properties.getProperty(sec+".ADV_TREND_LINES"));
         OVER_RES_LINE = Double.parseDouble(Settings.properties.getProperty(sec+".OVER_RES_LINE"));
         OVER_TREND_LINE = Double.parseDouble(Settings.properties.getProperty(sec+".OVER_TREND_LINE"));
 
@@ -70,8 +71,8 @@ public class ForexConstants {
         EX_SENS_5 = Double.parseDouble(Settings.properties.getProperty(sec+".EX_SENS_5"));
 
         sec = "ui";
-        WIDTH_OF_BAR = Integer.parseInt(Settings.properties.getProperty(sec+".WIDTH_OF_BAR"));
-        gridPeriod = Integer.parseInt(Settings.properties.getProperty(sec+".GRID_PERIOD"));
+        WIDTH_OF_BAR = (int)Double.parseDouble(Settings.properties.getProperty(sec+".WIDTH_OF_BAR"));
+        gridPeriod = (int)Double.parseDouble(Settings.properties.getProperty(sec+".GRID_PERIOD"));
 
         sec = "simulation";
         COMMISSION = Double.parseDouble(Settings.properties.getProperty(sec+".COMMISSION"));

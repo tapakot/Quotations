@@ -29,6 +29,7 @@ public class UiThread extends Thread {
     @Override
     public void run() {
         createGUI();
+        Thread.currentThread().setName("graphics");
         frameIsReady = true;
     }
 

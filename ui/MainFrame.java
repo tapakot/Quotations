@@ -30,7 +30,7 @@ public class MainFrame extends JFrame{
         super.setMinimumSize(new Dimension(1000, 400));
         super.setPreferredSize(getMinimumSize());
 
-        MenuBar menuBar = new MenuBar(buffer);
+        MenuBar menuBar = new MenuBar(buffer, this);
         setJMenuBar(menuBar);
 
         Box center = Box.createHorizontalBox();

@@ -11,9 +11,9 @@ import java.awt.event.ActionListener;
 
 class MenuBar extends JMenuBar {
 
-
-    MenuBar(QuotationBuffer buffer) {
-        final QuotationBuffer bufferFinal = buffer;
+    MenuBar(QuotationBuffer buffer, MainFrame frameOwner) {
+        final QuotationBuffer bufferFinal = buffer; //history test is always the same?
+        final MainFrame owner = frameOwner;
 
         JMenu fileMenu = new JMenu("File");
 
@@ -49,8 +49,21 @@ class MenuBar extends JMenuBar {
         });
         testMenu.add(histTest);
 
+        JMenu settingsMenu = new JMenu("Settings");
+
+        final JMenuItem settings = new JMenuItem("Settings");
+        settings.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SettingsThread settingsThread = new SettingsThread(owner);
+                settingsThread.start();
+            }
+        });
+        settingsMenu.add(settings);
+
         this.add(fileMenu);
         this.add(testMenu);
+        this.add(settingsMenu);
     }
 
 }

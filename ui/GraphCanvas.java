@@ -106,13 +106,14 @@ class GraphCanvas extends JPanel{
         lengthOfPip = round(lengthOfPip, 5);
         base = round(base, 5);*/
         //testing
-        System.out.println("height: "+height);
+        /*System.out.println("height: "+height);
         System.out.println("center: "+center);
         System.out.println("averageBar: "+averageBar);
         System.out.println("capacity: "+capacity);
         System.out.println("frequencyOfMarks: "+frequencyOfMarks);
         System.out.println("lengthOfPip: "+lengthOfPip);
         System.out.println("base: "+base);
+        */
 
         this.setBackground(Color.gray);
 
@@ -199,6 +200,9 @@ class GraphCanvas extends JPanel{
                 g2d.drawLine(x1, y1, x2, y2);
             }
         }
+
+        /*Thread thisThread = Thread.currentThread();
+        System.out.println("in canvas.draw (not main!): "+thisThread);*/
     }
 
     /** rounds an argument. math. */

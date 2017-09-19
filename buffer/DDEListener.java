@@ -41,7 +41,7 @@ class DDEListener implements DDEClientEventListener{
         if(itemIndex == 2) { // 1/3 times
             double bid = Double.parseDouble(partedResult[0]);
             double ask = Double.parseDouble(partedResult[1]);
-            int minute = Integer.parseInt(partedResult[2].substring(4));
+            int minute = Integer.parseInt(partedResult[2].substring(1,2));
             buffer.bid = bid;
             buffer.ask = ask;
             if((minute%5==0)&&(prevMinute != minute)){
