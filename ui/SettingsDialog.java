@@ -33,11 +33,13 @@ class SettingsDialog extends JDialog implements ActionListener{
         defaultButtons = new ArrayList<>();
 
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setMaximumSize(new Dimension(400, Toolkit.getDefaultToolkit().getScreenSize().height));
+        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        setMaximumSize(new Dimension(screen.width, screen.height));
+        setMinimumSize(new Dimension(550, 600));
+        setPreferredSize(getMinimumSize());
 
         mainBox = Box.createVerticalBox();
 
-        int i = 1;
         for(Enumeration e = Settings.properties.propertyNames(); e.hasMoreElements(); ){
             Object a = e.nextElement();
             //System.out.println(i+" "+a.toString());
@@ -45,8 +47,6 @@ class SettingsDialog extends JDialog implements ActionListener{
             String sec = name.substring(0, name.indexOf("."));
             name = name.substring(name.indexOf(".")+1);
             addSetting(sec, name, Double.parseDouble(Settings.properties.getProperty(sec+"."+name)));
-
-            i++;
         }
 
         JPanel butPanel = new JPanel(new GridLayout(1, 2, 0, 10));
@@ -61,11 +61,7 @@ class SettingsDialog extends JDialog implements ActionListener{
         butPanel.add(okButton);
         mainBox.add(butPanel);
 
-        add(mainBox);
-
-        pack();
-        setMinimumSize(new Dimension(getWidth(), getHeight()));
-
+        add(new JScrollPane(mainBox));
     }
 
     private void addSetting(String section, String name, double val){

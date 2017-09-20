@@ -55,7 +55,7 @@ public class HistoryTester {
                                 closePosition(pos, 1);
                             }
                         }
-                        openPosition(nextOpen, UP_DIRECTION, (int) (balance * 0.05));
+                        openPosition(nextOpen, UP_DIRECTION, (int) (balance * PERCENT_OF_BALANCE));
                         upCounter = UP_COUNTER;
                     }
                     break;
@@ -66,7 +66,7 @@ public class HistoryTester {
                                 closePosition(pos, 1);
                             }
                         }
-                        openPosition(nextOpen, DOWN_DIRECTION, (int) (balance * 0.05));
+                        openPosition(nextOpen, DOWN_DIRECTION, (int) (balance * PERCENT_OF_BALANCE));
                         downCounter = DOWN_COUNTER;
                     }
                     break;
@@ -85,7 +85,7 @@ public class HistoryTester {
                     }
                     break;
             }
-            if(upCounter!=UP_COUNTER && downCounter!=DOWN_COUNTER) { //if there was opening then NO CLOSING of this positions on opening quo!
+            if((upCounter!=UP_COUNTER) && (downCounter!=DOWN_COUNTER)) { //if there was opening then NO CLOSING of this positions on opening quo!
                 for (Position pos : positions) {
                     if ((pos.profit(nextOpen, nextOpen) <= pos.stopLoss) || (pos.profit(curLow, curLow) <= pos.stopLoss)) {
                         closePosition(pos, 2);
