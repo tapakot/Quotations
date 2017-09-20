@@ -40,7 +40,7 @@ class SettingsDialog extends JDialog implements ActionListener{
         int i = 1;
         for(Enumeration e = Settings.properties.propertyNames(); e.hasMoreElements(); ){
             Object a = e.nextElement();
-            System.out.println(i+" "+a.toString());
+            //System.out.println(i+" "+a.toString());
             String name = a.toString().trim();
             String sec = name.substring(0, name.indexOf("."));
             name = name.substring(name.indexOf(".")+1);

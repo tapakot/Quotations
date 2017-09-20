@@ -41,7 +41,7 @@ public class HistoryTester {
 
 
         while(currentIndex < buffer.countHistory) {
-            List<Quotation> buffer100 = bufferAll.subList(currentIndex-100, currentIndex); //in, ex (0-99)
+            List<Quotation> buffer100 = bufferAll.subList(currentIndex - 100, currentIndex); //in, ex (0-99)
             Quotation currentQuo = bufferAll.get(currentIndex);
             int advice = adviser.getAdvice(buffer100, currentQuo);
             double nextOpen = bufferAll.get(currentIndex + 1).open;
@@ -49,24 +49,24 @@ public class HistoryTester {
             //handling
             switch (advice) {
                 case ADVICE_UP:
-                    if(upCounter == 0) {
+                    if (upCounter == 0) {
                         for (Position pos : positions) {
                             if (pos.direction == DOWN_DIRECTION) {
                                 closePosition(pos, 1);
                             }
                         }
-                        openPosition(nextOpen, UP_DIRECTION, (int)(balance*0.1));
+                        openPosition(nextOpen, UP_DIRECTION, (int) (balance * 0.05));
                         upCounter = UP_COUNTER;
                     }
                     break;
                 case ADVICE_DOWN:
-                    if(downCounter == 0) {
+                    if (downCounter == 0) {
                         for (Position pos : positions) {
                             if (pos.direction == UP_DIRECTION) {
                                 closePosition(pos, 1);
                             }
                         }
-                        openPosition(nextOpen, DOWN_DIRECTION, (int)(balance*0.1));
+                        openPosition(nextOpen, DOWN_DIRECTION, (int) (balance * 0.05));
                         downCounter = DOWN_COUNTER;
                     }
                     break;
@@ -85,24 +85,28 @@ public class HistoryTester {
                     }
                     break;
             }
-            for (Position pos : positions) {
-                if ((pos.profit(nextOpen, nextOpen) <= pos.stopLoss) || (pos.profit(curLow, curLow) <= pos.stopLoss)) {
-                    closePosition(pos, 2);
-                    continue;
+            if(upCounter!=UP_COUNTER && downCounter!=DOWN_COUNTER) { //if there was opening then NO CLOSING of this positions on opening quo!
+                for (Position pos : positions) {
+                    if ((pos.profit(nextOpen, nextOpen) <= pos.stopLoss) || (pos.profit(curLow, curLow) <= pos.stopLoss)) {
+                        closePosition(pos, 2);
+                        continue;
+                    }
+                    if ((pos.money + pos.profit(nextOpen, nextOpen) <= 0) || (pos.money + pos.profit(curLow, curLow) <= 0)) {
+                        closePosition(pos, 3);
+                        continue;
+                    }
+                    if ((pos.profit(nextOpen, nextOpen) >= pos.takeProfit) || (pos.profit(currentQuo.high, currentQuo.high) >= pos.takeProfit)) {
+                        closePosition(pos, 4);
+                        continue;
+                    }
                 }
-                if ((pos.money + pos.profit(nextOpen, nextOpen) <= 0) || (pos.money + pos.profit(curLow, curLow) <= 0)) {
-                    closePosition(pos, 3);
-                    continue;
+                for (Position pos : toClose) {
+                    positions.remove(pos);
                 }
-                if ((pos.profit(nextOpen, nextOpen) >= pos.takeProfit) || (pos.profit(currentQuo.high, currentQuo.high) >= pos.takeProfit)) {
-                    closePosition(pos, 4);
-                    continue;
-                }
+                toClose.clear();
             }
-            for (Position pos : toClose) {
-                positions.remove(pos);
-            }
-            toClose.clear();
+
+
             currentIndex++;
             if(upCounter != 0) {upCounter--;}
             if(downCounter != 0){downCounter--;}

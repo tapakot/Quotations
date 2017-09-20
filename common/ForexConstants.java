@@ -22,6 +22,8 @@ public class ForexConstants {
     public static int DOWN_COUNTER;
     public static double COMMISSION;
     public static double TAKE_PROFIT;
+    //stopLoss = -money/STOP_LOSS_DIVIDER;
+    public static double STOP_LOSS_DIVIDER;
     public static double START_BALANCE;
     public static int UP_ADVICE_MIN_VALUE; //if the value is bigger advices to open up positions
     public static int DOWN_ADVICE_MAX_VALUE;
@@ -77,6 +79,7 @@ public class ForexConstants {
         sec = "simulation";
         COMMISSION = Double.parseDouble(Settings.properties.getProperty(sec+".COMMISSION"));
         TAKE_PROFIT = Double.parseDouble(Settings.properties.getProperty(sec+".TAKE_PROFIT"));
+        STOP_LOSS_DIVIDER = Double.parseDouble(Settings.properties.getProperty(sec+".STOP_LOSS_DIVIDER"));
         START_BALANCE = Double.parseDouble(Settings.properties.getProperty(sec+".START_BALANCE"));
     }
 }

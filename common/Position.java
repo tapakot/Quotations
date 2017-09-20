@@ -11,7 +11,7 @@ public class Position {
     public int direction;
     public int money;
     public double price;
-    public double stopLoss = -50;    //in $
+    public double stopLoss;    //in $
     public double takeProfit;
     public Date date;
     public double commission; //in $
@@ -25,8 +25,13 @@ public class Position {
     public Position(double price, int direction, int money, int takeProfit){
         this.price = price;
         this.direction = direction;
-        this.money = money;
+        if(money<500){
+            this.money = money;
+        } else {
+            this.money = money;
+        }
         this.takeProfit = takeProfit;
+        stopLoss = -money/STOP_LOSS_DIVIDER;
         commission = money * COMMISSION;
         allMoney = money * 500;
         date = new Date();
