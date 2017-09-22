@@ -21,6 +21,7 @@ public class HistoryTester {
     private ArrayList<Quotation> bufferAll;
     private int upCounter;
     private int downCounter;
+    private boolean closed;
 
     /** initialisation */
     public HistoryTester(QuotationBuffer buffer){
@@ -30,6 +31,7 @@ public class HistoryTester {
         toClose = new ArrayList<>();
         upCounter = 0; //to not make positions too frequently
         downCounter = 0;
+        closed = false;
     }
 
     /** starts and manages test. returns the value of balance after test. */
@@ -46,6 +48,7 @@ public class HistoryTester {
             int advice = adviser.getAdvice(buffer100, currentQuo);
             double nextOpen = bufferAll.get(currentIndex + 1).open;
             double curLow = currentQuo.low;
+            closed = false;
             //handling
             switch (advice) {
                 case ADVICE_UP:
@@ -53,6 +56,7 @@ public class HistoryTester {
                         for (Position pos : positions) {
                             if (pos.direction == DOWN_DIRECTION) {
                                 closePosition(pos, 1);
+                                closed = true;
                             }
                         }
                         openPosition(nextOpen, UP_DIRECTION, (int) (balance * PERCENT_OF_BALANCE));
@@ -64,6 +68,7 @@ public class HistoryTester {
                         for (Position pos : positions) {
                             if (pos.direction == UP_DIRECTION) {
                                 closePosition(pos, 1);
+                                closed = true;
                             }
                         }
                         openPosition(nextOpen, DOWN_DIRECTION, (int) (balance * PERCENT_OF_BALANCE));
@@ -74,6 +79,7 @@ public class HistoryTester {
                     for (Position pos : positions) {
                         if (pos.direction == UP_DIRECTION) {
                             closePosition(pos, 1);
+                            closed = true;
                         }
                     }
                     break;
@@ -81,11 +87,12 @@ public class HistoryTester {
                     for (Position pos : positions) {
                         if (pos.direction == DOWN_DIRECTION) {
                             closePosition(pos, 1);
+                            closed = true;
                         }
                     }
                     break;
             }
-            if((upCounter!=UP_COUNTER) && (downCounter!=DOWN_COUNTER)) { //if there was opening then NO CLOSING of this positions on opening quo!
+            if((upCounter!=UP_COUNTER) && (downCounter!=DOWN_COUNTER) && (!closed)) { //if there was opening then NO CLOSING of this positions on opening quo!
                 for (Position pos : positions) {
                     if ((pos.profit(nextOpen, nextOpen) <= pos.stopLoss) || (pos.profit(curLow, curLow) <= pos.stopLoss)) {
                         closePosition(pos, 2);
@@ -100,11 +107,11 @@ public class HistoryTester {
                         continue;
                     }
                 }
-                for (Position pos : toClose) {
-                    positions.remove(pos);
-                }
-                toClose.clear();
             }
+            for (Position pos : toClose) {
+                positions.remove(pos);
+            }
+            toClose.clear();
 
 
             currentIndex++;
@@ -112,7 +119,7 @@ public class HistoryTester {
             if(downCounter != 0){downCounter--;}
         }
 
-        bufferAll = null; //buffer.history becomes null
+        //bufferAll = null; //buffer.history becomes null
         return balance;
     }
 
@@ -121,17 +128,17 @@ public class HistoryTester {
         if((balance - money >= 0)&&(balance>=50)) {
             balance -= money;
             //informing output
-            System.out.print("Position opened at " + price + " (" + (currentIndex + 1) + ")"); //open price of next quo
+            /*System.out.print("Position opened at " + price + " (" + (currentIndex + 1) + ")"); //open price of next quo
             if (direction == UP_DIRECTION) {
                 System.out.print(" in UP direction.");
             } else {
                 System.out.print(" in DOWN direction.");
             }
-            System.out.println(" money: " + money + ". balance after opening: " + balance);
+            System.out.println(" money: " + money + ". balance after opening: " + balance);*/
 
             positions.add(new Position(price, direction, money, 100));
         } else {
-            System.out.println("not enough money to open position");
+            //System.out.println("not enough money to open position");
         }
     }
 
@@ -156,8 +163,8 @@ public class HistoryTester {
             }
             balance += profit + posToClose.money;
             toClose.add(posToClose);
-            System.out.print("Position closed at " + nextOpen + ". was opened at " + posToClose.price + ". Profit: " + profit);
-            System.out.println(" balance after closing: " + balance);
+            /*System.out.print("Position closed at " + nextOpen + ". was opened at " + posToClose.price + ". Profit: " + profit);
+            System.out.println(" balance after closing: " + balance);*/
         }
     }
 }

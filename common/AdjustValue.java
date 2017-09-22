@@ -1,12 +1,13 @@
 package common;
 
 public class AdjustValue {
-
+    public String section;
     public String name;
-    public double value;
+    public double defValue;
 
-    public AdjustValue(String name, double value){
+    public AdjustValue(String section, String name, double value){
+        this.section = section;
         this.name = name;
-        this.value = value;
+        this.defValue = value;
     }
 }

@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * All commands for panes (such as to draw or change info) should be send to MainFrame as a manager.
  */
 public class MainFrame extends JFrame{
-    QuotationBuffer buffer;
+    static QuotationBuffer buffer;
     static GraphCanvas graphCanvas;
     static PositionsPanel posPanel;
 

@@ -70,7 +70,7 @@ public class Settings{
             String name = a.toString().trim();
             String sec = name.substring(0, name.indexOf("."));
             if(sec.equals("adjustable")){
-                adjustValues.add(new AdjustValue(name.substring(name.indexOf(".")+1).trim(), Double.parseDouble(properties.getProperty(name))));
+                adjustValues.add(new AdjustValue(name.substring(0, name.indexOf(".")) ,name.substring(name.indexOf(".")+1).trim(), Double.parseDouble(properties.getProperty(name))));
             }
         }
     }
@@ -113,6 +113,7 @@ public class Settings{
             System.out.println("WARNING: Unable to read properties");
         }
 
+
         //writing into file
         BufferedWriter bw = null;
         try {
@@ -139,7 +140,16 @@ public class Settings{
         if( equalIndex > 0 )
         {
             String name = line.substring(0, equalIndex).trim();
-            String value = Settings.properties.getProperty(section+"."+name);
+            String value ="";
+            if(!section.equals("adjustable")){
+                value = Settings.properties.getProperty(section+"."+name);
+            } else {
+                for(AdjustValue adj : Settings.adjustValues){
+                    if(adj.name.equals(name)){
+                        value = Double.toString(adj.defValue);
+                    }
+                }
+            }
             result = name+" = "+value;
         }
 

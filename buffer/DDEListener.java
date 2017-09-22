@@ -44,7 +44,7 @@ class DDEListener implements DDEClientEventListener{
             int minute = Integer.parseInt(partedResult[2].substring(1,2));
             buffer.bid = bid;
             buffer.ask = ask;
-            if((minute%5==0)&&(prevMinute != minute)){
+            if((minute%5==0)&&(prevMinute != minute)){ //NULL_POINTER_EXEPTION if starts at 00, 05
                 changingQuo.close = prevBid; //изменился
                 changingQuo.high = maxBid; //
                 changingQuo.low = minBid;

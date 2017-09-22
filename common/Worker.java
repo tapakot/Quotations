@@ -21,7 +21,7 @@ public class Worker {
     /** buffer to manage */
     volatile QuotationBuffer buffer;
     /** main frame of User Interface */
-    MainFrame frame;
+    public static MainFrame mainFrame;
 
     public Worker(){}
 
@@ -37,7 +37,7 @@ public class Worker {
         Settings.setAdjustValues();
         //test
         for(AdjustValue aValue : settings.adjustValues){
-            System.out.println(aValue.name+" = "+aValue.value);
+            System.out.println(aValue.name+" = "+aValue.defValue);
         }
 
         //start buffer. wait for it
@@ -49,7 +49,7 @@ public class Worker {
         UiThread ui = new UiThread(buffer);
         ui.start();
         do{}while (!ui.frameIsReady);
-        frame = ui.getFrame();
+        mainFrame = ui.getFrame();
 
 
         //start analyser. FOR TESTS ONLY
@@ -80,6 +80,6 @@ public class Worker {
 
     /** inform worker about new information from buffer. */
     public void realTimeEvent(){
-        frame.realTimeEvent();
+        mainFrame.realTimeEvent();
     }
 }

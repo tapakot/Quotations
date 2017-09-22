@@ -46,7 +46,10 @@ class SettingsDialog extends JDialog implements ActionListener{
             String name = a.toString().trim();
             String sec = name.substring(0, name.indexOf("."));
             name = name.substring(name.indexOf(".")+1);
-            addSetting(sec, name, Double.parseDouble(Settings.properties.getProperty(sec+"."+name)));
+            if(!sec.equals("adjustable")) {
+                addSetting(sec, name, Double.parseDouble(Settings.properties.getProperty(sec + "." + name)));
+                mainBox.add(Box.createVerticalStrut(10));
+            }
         }
 
         JPanel butPanel = new JPanel(new GridLayout(1, 2, 0, 10));

@@ -84,4 +84,14 @@ public class ForexConstants {
         START_BALANCE = Double.parseDouble(Settings.properties.getProperty(sec+".START_BALANCE"));
         PERCENT_OF_BALANCE = Double.parseDouble(Settings.properties.getProperty(sec+".PERCENT_OF_BALANCE"));
     }
+
+    public static void applyAdjustmentValues (){
+        String sec = "adjustable";
+        OVER_RES_LINE = Double.parseDouble(Settings.properties.getProperty(sec+".OVER_RES_LINE"));
+        OVER_TREND_LINE = Double.parseDouble(Settings.properties.getProperty(sec+".OVER_TREND_LINE"));
+        RES_LINE_SENS = Double.parseDouble(Settings.properties.getProperty(sec+".RES_LINE_SENS"));
+        TREND_LINE_SENS = Double.parseDouble(Settings.properties.getProperty(sec+".TREND_LINE_SENS"));
+        PERCENT_OF_BALANCE = Double.parseDouble(Settings.properties.getProperty(sec+".PERCENT_OF_BALANCE"));
+        STOP_LOSS_DIVIDER = Double.parseDouble(Settings.properties.getProperty(sec+".STOP_LOSS_DIVIDER"));
+    }
 }
