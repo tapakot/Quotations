@@ -15,6 +15,7 @@ public class Adviser {
     Analyser analyser;
     AnalyserBuffer anBuffer;
     List<Quotation> history;
+    int last;
     Quotation quo; //new quotation
     double bid; //new bid
 
@@ -22,6 +23,7 @@ public class Adviser {
     public Adviser(){
         analyser = new Analyser();
         anBuffer = analyser.getBuffer();
+        last = HIST_COUNT;
     }
 
     public AnalyserBuffer getAnBuffer(){
@@ -88,7 +90,7 @@ public class Adviser {
         for(ResistanceLine line : anBuffer.exLines){
             //getting over up
             if(quo.high > line.middle*OVER_RES_LINE){
-                if((history.get(99).close < line.high)||(history.get(98).close < line.high)){
+                if((history.get(last-1).close < line.high)||(history.get(last-2).close < line.high)){
                     return ADVICE_CLOSE_DOWN * ADV_EX_LINES;
                 }
             }
@@ -98,7 +100,7 @@ public class Adviser {
             }*/
             //getting over down
             if(quo.low < line.middle/OVER_RES_LINE){
-                if((history.get(99).close > line.low)||(history.get(98).close > line.low)){
+                if((history.get(last-1).close > line.low)||(history.get(last-2).close > line.low)){
                     return ADVICE_CLOSE_UP * ADV_EX_LINES;
                 }
             }
@@ -106,9 +108,9 @@ public class Adviser {
                 return ADVICE_CLOSE_UP * ADV_EX_LINES;
             }*/
             //resistance
-            if(line.isCovering(quo.close) && !line.isCoveringError(history.get(99).close) && !line.isCoveringError(history.get(98).close)){
+            if(line.isCovering(quo.close) && !line.isCoveringError(history.get(last-1).close) && !line.isCoveringError(history.get(last-2).close)){
                 inALine = true;
-                if(history.get(99).close > quo.close){
+                if(history.get(last-1).close > quo.close){
                     fromUp = true;
                 }
             }
@@ -129,30 +131,30 @@ public class Adviser {
             Quotation historyLast = history.get(history.size()-1);
             if(tl.up) {
                 //getting over
-                if ((historyLast.close < tl.getY(99)) && (!tl.isCovering(99, historyLast.close))) {
-                    if ((quo.close) < tl.getY(100)&&(!tl.isCovering(100, quo.close))){
+                if ((historyLast.close < tl.getY(last-1)) && (!tl.isCovering(last-1, historyLast.close))) {
+                    if ((quo.close) < tl.getY(last)&&(!tl.isCovering(last, quo.close))){
                         return ADVICE_CLOSE_UP * ADV_TREND_LINES;
                     }
                 }
-                if (quo.low * OVER_TREND_LINE < tl.getY(100)) {
+                if (quo.low * OVER_TREND_LINE < tl.getY(last)) {
                     return ADVICE_CLOSE_UP * ADV_TREND_LINES;
                 }
                 //covering
-                if(tl.isCovering(100, quo.close)){
+                if(tl.isCovering(last, quo.close)){
                     return ADVICE_UP * ADV_TREND_LINES;
                 }
             } else {
                 //getting over
-                if ((historyLast.close > tl.getY(99)) && (!tl.isCovering(99, historyLast.close))) {
-                    if ((quo.close) > tl.getY(100)&&(!tl.isCovering(100, quo.close))){
+                if ((historyLast.close > tl.getY(last-1)) && (!tl.isCovering(last-1, historyLast.close))) {
+                    if ((quo.close) > tl.getY(last)&&(!tl.isCovering(last, quo.close))){
                         return ADVICE_CLOSE_DOWN * ADV_TREND_LINES;
                     }
                 }
-                if (quo.low / OVER_TREND_LINE > tl.getY(100)) {
+                if (quo.low / OVER_TREND_LINE > tl.getY(last)) {
                     return ADVICE_CLOSE_DOWN * ADV_TREND_LINES;
                 }
                 //covering
-                if(tl.isCovering(100, quo.close)){
+                if(tl.isCovering(last, quo.close)){
                     return ADVICE_DOWN * ADV_TREND_LINES;
                 }
             }

@@ -7,6 +7,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.ArrayList;
 
+import static common.ForexConstants.HIST_COUNT;
+
 /** Main frame of User Interface.
  * Manages all panes.
  * All commands for panes (such as to draw or change info) should be send to MainFrame as a manager.
@@ -55,7 +57,7 @@ public class MainFrame extends JFrame{
      */
     public void realTimeEvent(){
         graphCanvas.Quotations.remove(0);
-        graphCanvas.Quotations.add(buffer.getQuotation((short)5, 99));
+        graphCanvas.Quotations.add(buffer.getQuotation((short)5, HIST_COUNT-1));
         graphCanvas.repaint();
     }
 

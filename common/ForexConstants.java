@@ -30,6 +30,7 @@ public class ForexConstants {
     public static int DOWN_ADVICE_MAX_VALUE;
     public static double CLOSE_DOWN_MIN_VALUE;
     public static double CLOSE_UP_MAX_VALUE;
+    public static int HIST_COUNT;
 
 
     public static double EX_SENS_4;// 35?+ 20?+ 13?~
@@ -54,6 +55,7 @@ public class ForexConstants {
         String sec = "common";
         RES_LINE_SENS = Double.parseDouble(Settings.properties.getProperty(sec+".RES_LINE_SENS"));
         TREND_LINE_SENS = Double.parseDouble(Settings.properties.getProperty(sec+".TREND_LINE_SENS"));
+        HIST_COUNT = (int)Double.parseDouble(Settings.properties.getProperty(sec+".HIST_COUNT"));
 
         sec = "adviser";
         UP_COUNTER = (int)Double.parseDouble(Settings.properties.getProperty(sec + ".UP_COUNTER"));
@@ -88,10 +90,12 @@ public class ForexConstants {
     public static void applyAdjustmentValues (){
         String sec = "adjustable";
         OVER_RES_LINE = Double.parseDouble(Settings.properties.getProperty(sec+".OVER_RES_LINE"));
-        OVER_TREND_LINE = Double.parseDouble(Settings.properties.getProperty(sec+".OVER_TREND_LINE"));
         RES_LINE_SENS = Double.parseDouble(Settings.properties.getProperty(sec+".RES_LINE_SENS"));
-        TREND_LINE_SENS = Double.parseDouble(Settings.properties.getProperty(sec+".TREND_LINE_SENS"));
         PERCENT_OF_BALANCE = Double.parseDouble(Settings.properties.getProperty(sec+".PERCENT_OF_BALANCE"));
         STOP_LOSS_DIVIDER = Double.parseDouble(Settings.properties.getProperty(sec+".STOP_LOSS_DIVIDER"));
+        EX_SENS_4 = Double.parseDouble(Settings.properties.getProperty(sec+".EX_SENS_4"));
+        EX_SENS_2 = Double.parseDouble(Settings.properties.getProperty(sec+".EX_SENS_2"));
+        EX_SENS_5 = Double.parseDouble(Settings.properties.getProperty(sec+".EX_SENS_5"));
+
     }
 }

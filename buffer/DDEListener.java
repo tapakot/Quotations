@@ -3,6 +3,8 @@ package buffer;
 import com.pretty_tools.dde.client.DDEClientEventListener;
 import common.Quotation;
 
+import static common.ForexConstants.HIST_COUNT;
+
 /** listener class for DDE conversation */
 class DDEListener implements DDEClientEventListener{
     private QuotationBuffer buffer;
@@ -18,10 +20,10 @@ class DDEListener implements DDEClientEventListener{
         this.buffer = buffer;
         buffer.trueData = false; //because starts between 5-min moments
         changingQuo = new Quotation((short)5);
-        changingQuo.open = buffer.getQuotation((short)5, 99).open;
-        changingQuo.high = buffer.getQuotation((short)5, 99).high;
+        changingQuo.open = buffer.getQuotation((short)5, HIST_COUNT-1).open;
+        changingQuo.high = buffer.getQuotation((short)5, HIST_COUNT-1).high;
         maxBid = changingQuo.high;
-        changingQuo.low = buffer.getQuotation((short)5, 99).low;
+        changingQuo.low = buffer.getQuotation((short)5, HIST_COUNT-1).low;
         minBid = changingQuo.low;
         changingQuo.close = 0;
         partedResult = new String[3];

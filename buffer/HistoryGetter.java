@@ -7,6 +7,8 @@ import java.util.*;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 
+import static common.ForexConstants.HIST_COUNT;
+
 /** Getter of history. Works with .xls files. */
 class HistoryGetter {
 
@@ -25,7 +27,7 @@ class HistoryGetter {
         catch (FileNotFoundException e){System.out.println("!!! Check the path to the History !!!");}
         catch (IOException e){System.out.println("!!! IOExeption while reading History !!!");}
         Sheet sheet = wb.getSheetAt(0);
-        int rowStart = sheet.getLastRowNum()-99; //100th from tail
+        int rowStart = sheet.getLastRowNum()-HIST_COUNT+1; //100th from tail
         int rowEnd = sheet.getLastRowNum();
         for(int rowNum = rowStart; rowNum <= rowEnd; rowNum++){
             Row row = sheet.getRow(rowNum);

@@ -102,7 +102,7 @@ public class QuotationBuffer {
     /** changes buffer */
     private void changeBuffer(Quotation quo){
         if(counter%5==0){
-            if (trueData==true){quotations5.remove(0);} else{quotations5.remove(99);}
+            if (trueData==true){quotations5.remove(0);} else{quotations5.remove(quotations5.size()-1);}
             //quotations5.add(quo); //передается объект, а не его содержимое. при изменении объекта поменяется и буфер
             Quotation q = new Quotation();
             q.close=quo.close;

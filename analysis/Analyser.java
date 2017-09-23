@@ -23,14 +23,14 @@ public class Analyser {
     /** initialisation */
     public Analyser(){
         anBuffer = new AnalyserBuffer();
-        toAnalyse = new double[2][100];
+        toAnalyse = new double[2][HIST_COUNT];
         toAn = new ArrayList<Quotation>();
     }
 
     /** sets QuotationBuffer to be analyse */
     public void setQuotationBuffer(QuotationBuffer buffer){     //separated method because it can be test/history/real
         this.buffer = buffer;
-        for(int i=0; i<100; i++){
+        for(int i=0; i<HIST_COUNT; i++){
             toAnalyse[0][i] = buffer.getQuotation((short)5, i).high;
             toAnalyse[1][i] = buffer.getQuotation((short)5, i).low;
             toAn.add(buffer.getQuotation((short)5, i));
@@ -39,7 +39,7 @@ public class Analyser {
 
     /** sets a buffer to be analysed by List of quotations */
     public void setQuotationBuffer(List<Quotation> buffer100){
-        for(int i=0; i<100; i++){ //99
+        for(int i=0; i<HIST_COUNT; i++){ //99
             toAnalyse[0][i] = buffer100.get(i).high;
             toAnalyse[1][i] = buffer100.get(i).low;
             toAn.add(buffer100.get(i));
@@ -62,7 +62,7 @@ public class Analyser {
     }
 
     private void analyseForExtremes() {
-        for (int i = 5; i < 94; i++) { //0-4; 95-99 could not be interpreted as extremes
+        for (int i = 5; i < HIST_COUNT-6; i++) { //0-4; 95-99 could not be interpreted as extremes
             boolean max = true;
             if (toAnalyse[0][i - 4] * EX_SENS_4 > toAnalyse[0][i]) {
                 max = false;
@@ -243,7 +243,7 @@ public class Analyser {
         //loop 2. getting over deletion
         ArrayList<TrendLine> toDelete = new ArrayList<>();
         for(TrendLine tl : TLList){
-            for(int i = (int)tl.coordinates.get(0).getX(); i<100; i++){
+            for(int i = (int)tl.coordinates.get(0).getX(); i<HIST_COUNT; i++){
                 if(tl.up){ //for up lines getting over down
                     //2nd closing
                     if((toAn.get(i).close < tl.getY(i))&&(!tl.isCovering(i, toAn.get(i).close))){

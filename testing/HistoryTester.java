@@ -38,12 +38,12 @@ public class HistoryTester {
     public double test(){
         //preparing
         Adviser adviser = new Adviser();
-        currentIndex = 100; //0-99 are analysed. 100th is the first to get advice about
+        currentIndex = HIST_COUNT; //0-99 are analysed. 100th is the first to get advice about
         bufferAll = buffer.history;
 
 
         while(currentIndex < buffer.countHistory) {
-            List<Quotation> buffer100 = bufferAll.subList(currentIndex - 100, currentIndex); //in, ex (0-99)
+            List<Quotation> buffer100 = bufferAll.subList(currentIndex - HIST_COUNT, currentIndex); //in, ex (0-99)
             Quotation currentQuo = bufferAll.get(currentIndex);
             int advice = adviser.getAdvice(buffer100, currentQuo);
             double nextOpen = bufferAll.get(currentIndex + 1).open;
