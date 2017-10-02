@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 /** Buffer with indicator values */
 public class AnalyserBuffer {
-    public ArrayList<Extreme> extremes;
-    public ArrayList<Double> maximums;
-    public ArrayList<Double> minimums;
+    volatile public ArrayList<Extreme> extremes;
+    volatile public ArrayList<Double> maximums;
+    volatile public ArrayList<Double> minimums;
     /** resistance lines calculated using extremes */
-    public ArrayList<ResistanceLine> exLines;
+    volatile public ArrayList<ResistanceLine> exLines;
     /** trend lines calculated using extremes */
-    public ArrayList<TrendLine> trendLines;
+    volatile public ArrayList<TrendLine> trendLines;
 
     /** initialising */
     public AnalyserBuffer(){
@@ -22,8 +22,8 @@ public class AnalyserBuffer {
     }
 
     public void clean(){
-        //maximums.clear();
-        //minimums.clear();
+        maximums.clear();
+        minimums.clear();
         extremes.clear();
         exLines.clear();
         trendLines.clear();

@@ -1,12 +1,13 @@
 package testing;
 
 import advicing.Adviser;
-import analysis.Analyser;
 import buffer.QuotationBuffer;
 import common.*;
 import static common.ForexConstants.*;
+import static java.lang.Math.abs;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /** Class needed to test a strategy on the history
@@ -16,7 +17,7 @@ public class HistoryTester {
     private QuotationBuffer buffer;
     private double balance;
     private ArrayList<Position> positions;
-    private ArrayList<Position> toClose;
+    private HashSet<Position> toClose;
     private int currentIndex;
     private ArrayList<Quotation> bufferAll;
     private int upCounter;
@@ -28,7 +29,7 @@ public class HistoryTester {
         this.buffer = buffer;
         balance = START_BALANCE;
         positions = new ArrayList<Position>();
-        toClose = new ArrayList<>();
+        toClose = new HashSet<>();
         upCounter = 0; //to not make positions too frequently
         downCounter = 0;
         closed = false;
@@ -92,8 +93,16 @@ public class HistoryTester {
                     }
                     break;
             }
-            if((upCounter!=UP_COUNTER) && (downCounter!=DOWN_COUNTER) && (!closed)) { //if there was opening then NO CLOSING of this positions on opening quo!
+            //if((upCounter!=UP_COUNTER) && (downCounter!=DOWN_COUNTER) && (!closed)) { //if there was opening then NO CLOSING of this positions on opening quo!
                 for (Position pos : positions) {
+                    //dynamic stopLoss
+                    if(pos.profit(nextOpen, nextOpen) > 50){
+                        double newStop = pos.profit(nextOpen, nextOpen) - pos.money/STOP_LOSS_DIVIDER;
+                        if(newStop > pos.stopLoss){
+                            pos.stopLoss = newStop;
+                        }
+                    }
+
                     if ((pos.profit(nextOpen, nextOpen) <= pos.stopLoss) || (pos.profit(curLow, curLow) <= pos.stopLoss)) {
                         closePosition(pos, 2);
                         continue;
@@ -107,8 +116,27 @@ public class HistoryTester {
                         continue;
                     }
                 }
-            }
-            for (Position pos : toClose) {
+            //}
+            for (Position pos : toClose) { //close once because toClose is HashSet
+                double profit = 1;
+                int cause = 1;
+                if ((pos.profit(nextOpen, nextOpen) <= pos.stopLoss) || (pos.profit(curLow, curLow) <= pos.stopLoss)) {
+                    profit = pos.stopLoss;
+                    cause = 2;
+                } else
+                if ((pos.money + pos.profit(nextOpen, nextOpen) <= 0) || (pos.money + pos.profit(curLow, curLow) <= 0)) {
+                    profit = -pos.money;
+                    cause = 3;
+                } else
+                if ((pos.profit(nextOpen, nextOpen) >= pos.takeProfit) || (pos.profit(currentQuo.high, currentQuo.high) >= pos.takeProfit)) {
+                    profit = pos.takeProfit;
+                    cause = 4;
+                }else{
+                    profit = pos.profit(nextOpen, nextOpen);
+                }
+                balance += profit + pos.money;
+                /*System.out.print("Position closed at " + nextOpen + ". was opened at " + pos.price + ". Profit: " + profit+". cause: "+cause);
+                System.out.println(" balance after closing: " + balance);*/
                 positions.remove(pos);
             }
             toClose.clear();
@@ -143,25 +171,9 @@ public class HistoryTester {
     }
 
     /** imitates a closing */
-    private void closePosition(Position posToClose, int cause){    // wrong!!! (why?)
-        if(currentIndex!=buffer.countHistory) { //right. countHistory from 0 as curIndex.
-            double nextOpen = bufferAll.get(currentIndex + 1).open;
-            double profit = 1;
-            switch (cause){
-                case 1: //advice
-                    profit = posToClose.profit(nextOpen, nextOpen);
-                    break;
-                case 2: //stopLoss
-                    profit = posToClose.stopLoss;
-                    break;
-                case 3: //0 money
-                    profit = -posToClose.money;
-                    break;
-                case 4: //takeProfit
-                    profit = posToClose.takeProfit;
-                    break;
-            }
-            balance += profit + posToClose.money;
+    private void closePosition(Position posToClose, int cause){    // wrong!!! (why?) twice profit
+        if(currentIndex!=buffer.countHistory) { //right. countHistory from 0 as well as curIndex.
+
             toClose.add(posToClose);
             /*System.out.print("Position closed at " + nextOpen + ". was opened at " + posToClose.price + ". Profit: " + profit);
             System.out.println(" balance after closing: " + balance);*/

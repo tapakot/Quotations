@@ -53,10 +53,5 @@ public class UiThread extends Thread {
         frame.drawTrendLines(trLines);
     }
 
-    /** managing main frame. sets new pos-s instead of old ones. */
-    public void setPositions(ArrayList pos){ frame.setPositions(pos);}
-
-    public void setBalance(double balance){ frame.setBalance(balance);}
-
     public void newBid(){ frame.newBid();}
 }

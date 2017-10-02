@@ -30,7 +30,9 @@ public class Position {
         } else {
             this.money = money;
         }
-        this.takeProfit = takeProfit;
+        //this.takeProfit = TAKE_PROFIT;
+        //this.takeProfit = takeProfit;
+        this.takeProfit = money*TAKE_PROFIT;
         stopLoss = -money/STOP_LOSS_DIVIDER;
         commission = money * COMMISSION;
         allMoney = money * 500;

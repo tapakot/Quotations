@@ -34,7 +34,7 @@ public class QuotationBuffer {
     public boolean trueData;
 
     /** flag. if to call RealTimeTester.newData() */
-    public boolean test;
+    volatile public boolean test; //used by buffer and r/t tester
 
     /** count of all known 5-min quotations. approximately 10.000. */
     public int countHistory;
@@ -92,7 +92,7 @@ public class QuotationBuffer {
     void realTimeEvent(Quotation quo){
         counter += quo.period;
         changeBuffer(quo);
-        showQuotations();
+        //showQuotations();
         worker.realTimeEvent();
         if(counter == 240){
             counter = 0;

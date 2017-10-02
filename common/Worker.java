@@ -12,6 +12,8 @@ import static common.ForexConstants.*;
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /** Worker manages work of some other classes.
  * One of the main classes.

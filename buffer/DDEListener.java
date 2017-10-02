@@ -50,7 +50,7 @@ class DDEListener implements DDEClientEventListener{
                 changingQuo.close = prevBid; //изменился
                 changingQuo.high = maxBid; //
                 changingQuo.low = minBid;
-                System.out.println("for 5 minutes: \nmax/minBid: "+ maxBid+"/"+minBid+"\nmax/minAsk: "+ maxAsk+"/"+minAsk);
+                //System.out.println("for 5 minutes: \nmax/minBid: "+ maxBid+"/"+minBid+"\nmax/minAsk: "+ maxAsk+"/"+minAsk);
 
                     //System.out.println("\n*** ATTENTION: counting was started between 5-min moments. Unpredictable open, high and low params ***\n");
                 buffer.realTimeEvent(changingQuo);
@@ -62,8 +62,8 @@ class DDEListener implements DDEClientEventListener{
                 changingQuo.open = bid;
             }
             else {
-                if (bid > maxBid){maxBid=bid; System.out.println("max: "+ maxBid);}
-                if ((bid < minBid)||(minBid == 0)){minBid=bid; System.out.println("min: "+ minBid);}
+                if (bid > maxBid){maxBid=bid;}
+                if ((bid < minBid)||(minBid == 0)){minBid=bid;}
                 if (ask > maxAsk){maxAsk=ask;}
                 if ((ask < minAsk)||(minAsk==0)){minAsk=ask;}
             }

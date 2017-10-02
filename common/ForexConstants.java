@@ -24,8 +24,9 @@ public class ForexConstants {
     public static double TAKE_PROFIT;
     //stopLoss = -money/STOP_LOSS_DIVIDER;
     public static double STOP_LOSS_DIVIDER;
+    public static double DYNAMIC_STOP_LOSS_DIVIDER;
     public static double START_BALANCE;
-    public static double PERCENT_OF_BALANCE;
+    public static double PERCENT_OF_BALANCE; //money to open
     public static int UP_ADVICE_MIN_VALUE; //if the value is bigger advices to open up positions
     public static int DOWN_ADVICE_MAX_VALUE;
     public static double CLOSE_DOWN_MIN_VALUE;
@@ -96,6 +97,6 @@ public class ForexConstants {
         EX_SENS_4 = Double.parseDouble(Settings.properties.getProperty(sec+".EX_SENS_4"));
         EX_SENS_2 = Double.parseDouble(Settings.properties.getProperty(sec+".EX_SENS_2"));
         EX_SENS_5 = Double.parseDouble(Settings.properties.getProperty(sec+".EX_SENS_5"));
-
+        TAKE_PROFIT = Double.parseDouble(Settings.properties.getProperty(sec+".TAKE_PROFIT"));
     }
 }

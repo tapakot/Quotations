@@ -4,9 +4,11 @@ import advicing.Adviser;
 import analysis.AnalyserBuffer;
 import buffer.QuotationBuffer;
 import common.Position;
+import ui.MainFrame;
 import ui.UiThread;
 
 import javax.xml.crypto.Data;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -17,7 +19,7 @@ import static common.ForexConstants.*;
  */
 class RealTimeTesterThread extends Thread {
     QuotationBuffer buffer;
-    UiThread ui;
+    MainFrame ui;
     Adviser advicer;
     AnalyserBuffer anBuffer;
     RealTimeTester tester;
@@ -26,8 +28,9 @@ class RealTimeTesterThread extends Thread {
     double balance;
     Date date;
     Date oldDate;
+    SimpleDateFormat dtfrmt;
 
-    RealTimeTesterThread(QuotationBuffer buffer, UiThread ui, RealTimeTester tester){
+    RealTimeTesterThread(QuotationBuffer buffer, MainFrame ui, RealTimeTester tester){
         this.buffer = buffer;
         this.ui = ui;
         this.tester = tester;
@@ -37,14 +40,16 @@ class RealTimeTesterThread extends Thread {
         oldDate = new Date(0);
         balance = START_BALANCE;
         anBuffer = advicer.getAnBuffer();
-        ui.drawExtremes(anBuffer.maximums, anBuffer.minimums);
-        ui.drawResLines(anBuffer.exLines);
+        ui.drawExtremes(advicer.getAnBuffer().maximums, advicer.getAnBuffer().minimums);
+        ui.drawResLines(advicer.getAnBuffer().exLines);
+        dtfrmt = new SimpleDateFormat("HH:mm");
     }
 
     @Override
     public void run(){
         buffer.test = true;
         buffer.tester = tester;
+        Thread.currentThread().setName("real-time test thread");
 /*        try{wait();} //???
         catch(InterruptedException e){}*/
     }
@@ -55,52 +60,99 @@ class RealTimeTesterThread extends Thread {
 
     void newData() {
         date = new Date();
-        if (date.getTime() - oldDate.getTime() > 1000 * 30) { //once in 30 seconds
+        if ((date.getTime() - oldDate.getTime() > 1000 * 60 * 5)||(positions.size()==0)) { //once in 30 seconds
             int advice = advicer.getAdvice(buffer.getQuotation((short) 5), buffer.getBid());
-            if (advice == ADVICE_UP) {
-                for (Position pos : positions) {
-                    if (pos.direction == DOWN_DIRECTION) {
-                        closePosition(pos);
+            switch (advice) {
+                case ADVICE_UP:
+                    for (Position pos : positions) {
+                        if (pos.direction == DOWN_DIRECTION) {
+                            if(pos.profit(buffer.getBid(), buffer.getAsk()) < -pos.money/10) {
+                                closePosition(pos, 1);
+                            }
+                        }
                     }
-                }
-                openPosition(buffer.getBid(), UP_DIRECTION, 100);
-                oldDate = date;
-            } else if (advice == ADVICE_DOWN) {
-                for (Position pos : positions) {
-                    if (pos.direction == UP_DIRECTION) {
-                        closePosition(pos);
+                    openPosition(buffer.getBid(), UP_DIRECTION, (int) (balance * PERCENT_OF_BALANCE));
+                    oldDate = new Date();
+                    break;
+                case ADVICE_DOWN:
+                    for (Position pos : positions) {
+                        if (pos.direction == UP_DIRECTION) {
+                            if(pos.profit(buffer.getBid(), buffer.getAsk()) < -pos.money/10) {
+                                closePosition(pos, 1);
+                            }
+                        }
                     }
-                }
-                openPosition(buffer.getBid(), DOWN_DIRECTION, 100);
-                oldDate = date;
-            } else if (advice == ADVICE_CLOSE_DOWN) {
-                for (Position pos : positions) {
-                    if (pos.direction == DOWN_DIRECTION) {
-                        closePosition(pos);
+                    openPosition(buffer.getBid(), DOWN_DIRECTION, (int) (balance * PERCENT_OF_BALANCE));
+                    oldDate = new Date();
+                    break;
+                case ADVICE_CLOSE_UP:
+                    for (Position pos : positions) {
+                        if (pos.direction == UP_DIRECTION) {
+                            if(pos.profit(buffer.getBid(), buffer.getAsk()) < -pos.money/10) {
+                                closePosition(pos, 1);
+                            }
+                        }
                     }
-                }
-            } else if (advice == ADVICE_CLOSE_UP) {
-                for (Position pos : positions) {
-                    if (pos.direction == UP_DIRECTION) {
-                        closePosition(pos);
+                    break;
+                case ADVICE_CLOSE_DOWN:
+                    for (Position pos : positions) {
+                        if (pos.direction == DOWN_DIRECTION) {
+                            if(pos.profit(buffer.getBid(), buffer.getAsk()) < -pos.money/10) {
+                                closePosition(pos, 1);
+                            }
+                        }
                     }
-                }
+                    break;
             }
         }
+
         for (Position pos : positions) {
-            if (pos.profit(buffer.getBid(), buffer.getAsk()) > TAKE_PROFIT) {
-                closePosition(pos);
+            //dynamic stopLoss
+            if(pos.profit(buffer.getBid(), buffer.getAsk()) > 50){
+                double newStop = pos.profit(buffer.getBid(), buffer.getAsk()) - pos.money/STOP_LOSS_DIVIDER;
+                if(newStop > pos.stopLoss){
+                    pos.stopLoss = newStop;
+                }
             }
-            if (pos.profit(buffer.getBid(), buffer.getAsk()) > pos.takeProfit) {
-                closePosition(pos);
+
+            if (pos.profit(buffer.getBid(), buffer.getAsk()) <= pos.stopLoss) {
+                closePosition(pos, 2);
+                continue;
             }
-            if (pos.money + pos.profit(buffer.getBid(), buffer.getAsk()) <=0  ){
-                closePosition(pos);
+            if (pos.money + pos.profit(buffer.getBid(), buffer.getAsk()) <= 0) {
+                closePosition(pos, 3);
+                continue;
             }
-            if (pos.profit(buffer.getBid(), buffer.getAsk()) + pos.stopLoss <=0){
-                closePosition(pos);
+            if (pos.profit(buffer.getBid(), buffer.getAsk()) >= pos.takeProfit) {
+                closePosition(pos, 4);
+                continue;
             }
         }
+
+        for (Position pos : toClose) { //close once because toClose is HashSet
+            double profit = 1;
+            int cause = 1;
+            if (pos.profit(buffer.getBid(), buffer.getAsk()) <= pos.stopLoss) {
+                profit = pos.stopLoss;
+                cause = 2;
+            } else
+            if (pos.money + pos.profit(buffer.getBid(), buffer.getAsk()) <= 0) {
+                profit = -pos.money;
+                cause = 3;
+            } else
+            if (pos.profit(buffer.getBid(), buffer.getAsk()) >= pos.takeProfit) {
+                profit = pos.takeProfit;
+                cause = 4;
+            }else{
+                profit = pos.profit(buffer.getBid(), buffer.getAsk());
+            }
+            balance += profit + pos.money;
+            System.out.print(dtfrmt.format(date) + " Position closed at " + buffer.getBid() + ". was opened at " + pos.price+" "+ pos.getTimeSting() + ". Profit: " + profit+". cause: "+cause);
+            System.out.println(" balance after closing: " + balance);
+            positions.remove(pos);
+        }
+        toClose.clear();
+
         //closing
         for (Position pos : toClose) {
             balance += pos.profit(buffer.getBid(), buffer.getAsk()) + pos.money;
@@ -112,19 +164,18 @@ class RealTimeTesterThread extends Thread {
     }
 
     void openPosition(double price, int direction, int money){
-        if(balance>=money) {
+        if((balance - money >= 0)&&(balance>=50)) {
             balance -= money;
             positions.add(new Position(price, direction, money, 100));
-            System.out.print("Position opened at " + buffer.getBid() + ".");
+            Date date = new Date();
+            System.out.print(dtfrmt.format(date)+ " Position opened at " + buffer.getBid() + ".");
             System.out.println(" balance after opening: " + balance);
         }
     }
 
     /** imitates a closing */
-    void closePosition(Position posToClose){
+    void closePosition(Position posToClose, int cause){
         toClose.add(posToClose);
-        System.out.print("Position closed at "+ buffer.getBid()+". was opened at "+ posToClose.price+". Profit: "+posToClose.profit(buffer.getBid(), buffer.getAsk()));
-        System.out.println(" balance after closing: "+ balance);
     }
 
 }

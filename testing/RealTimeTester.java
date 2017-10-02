@@ -2,6 +2,7 @@ package testing;
 
 import buffer.QuotationBuffer;
 import common.Quotation;
+import ui.MainFrame;
 import ui.UiThread;
 import advicing.*;
 
@@ -10,14 +11,14 @@ import advicing.*;
  */
 public class RealTimeTester {
     QuotationBuffer buffer;
-    UiThread ui;
-    RealTimeTesterThread thread;
+    MainFrame ui;
+    RealTimeTesterThread RTthread;
 
     /** initialising.
      * @param buffer to be analysed and get new data from
      * @param ui where to show opened positions
      */
-    public RealTimeTester(QuotationBuffer buffer, UiThread ui){
+    public RealTimeTester(QuotationBuffer buffer, MainFrame ui){
         this.buffer = buffer;
         this.ui = ui;
     }
@@ -26,16 +27,16 @@ public class RealTimeTester {
      * an endless test until stopTest().
      */
     public void test(){
-        thread = new RealTimeTesterThread(buffer, ui, this);
-        thread.start();
+        RTthread = new RealTimeTesterThread(buffer, ui, this);
+        RTthread.start();
     }
 
     public void newData(){
-        thread.newData();
+        RTthread.newData();
         ui.newBid();
     }
 
     public void stopTest(){
-        thread.stopThread();
+        RTthread.stopThread();
     }
 }

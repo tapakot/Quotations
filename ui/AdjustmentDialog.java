@@ -36,7 +36,6 @@ class AdjustmentDialog extends JDialog implements ActionListener{
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         setMaximumSize(new Dimension(screen.width, screen.height));
         setMinimumSize(new Dimension(650, 250));
-        setPreferredSize(getMinimumSize());
 
         Box mainBox = Box.createVerticalBox();
 
@@ -75,6 +74,7 @@ class AdjustmentDialog extends JDialog implements ActionListener{
         mainBox.add(buttonPanel);
 
         this.add(mainBox);
+        pack();
     }
 
     @Override

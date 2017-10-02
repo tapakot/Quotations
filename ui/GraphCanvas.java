@@ -49,10 +49,10 @@ class GraphCanvas extends JPanel{
         setPreferredSize(getMinimumSize());
         this.buffer = buffer;
         Quotations = new ArrayList<>();
-        countOfBars = 99;
+        countOfBars = HIST_COUNT-1;
         for(int i= 0; i<countOfBars; i++){
             // should be changed by realTimeEvent
-            Quotations.add(buffer.getQuotation((short)5, 100-countOfBars-1+i)); //in the end but not the last one (unpredictable)
+            Quotations.add(buffer.getQuotation((short)5, HIST_COUNT-countOfBars-1+i)); //in the end but not the last one (unpredictable)
         }
 
         extremes_f = false;
@@ -194,9 +194,9 @@ class GraphCanvas extends JPanel{
                 //from the 1st (first one) bar to the 99th (last one)
                 x1 = (int)tl.coordinates.get(0).getX(); //index of bar
                 y1 = getY(tl.getY(x1));
-                y2 = getY(tl.getY(99));
+                y2 = getY(tl.getY(countOfBars));
                 x1 = spaceBetweenBars + (barPeriod * x1); //x coord on the canvas
-                x2 = spaceBetweenBars + (barPeriod * 98);
+                x2 = spaceBetweenBars + (barPeriod * countOfBars-1);
                 g2d.drawLine(x1, y1, x2, y2);
             }
         }
