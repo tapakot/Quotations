@@ -53,7 +53,9 @@ class DDEListener implements DDEClientEventListener{
                 //System.out.println("for 5 minutes: \nmax/minBid: "+ maxBid+"/"+minBid+"\nmax/minAsk: "+ maxAsk+"/"+minAsk);
 
                     //System.out.println("\n*** ATTENTION: counting was started between 5-min moments. Unpredictable open, high and low params ***\n");
-                buffer.realTimeEvent(changingQuo);
+                try{
+                    buffer.realTimeEvent(changingQuo);
+                }catch (NullPointerException e){}
                 buffer.trueData = true;
                 maxAsk=0;
                 maxBid=0;

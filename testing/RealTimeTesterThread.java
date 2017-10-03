@@ -5,9 +5,13 @@ import analysis.AnalyserBuffer;
 import buffer.QuotationBuffer;
 import common.Position;
 import ui.MainFrame;
+import ui.RealTimeInformDialog;
 import ui.UiThread;
 
-import javax.xml.crypto.Data;
+import javax.sound.sampled.*;
+import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,19 +41,23 @@ class RealTimeTesterThread extends Thread {
         advicer = new Adviser();
         positions = new ArrayList<Position>();
         toClose = new ArrayList<>();
-        oldDate = new Date(0);
+        oldDate = new Date();
         balance = START_BALANCE;
         anBuffer = advicer.getAnBuffer();
         ui.drawExtremes(advicer.getAnBuffer().maximums, advicer.getAnBuffer().minimums);
         ui.drawResLines(advicer.getAnBuffer().exLines);
+        ui.drawTrendLines(advicer.getAnBuffer().trendLines);
+        ui.repaint();
         dtfrmt = new SimpleDateFormat("HH:mm");
     }
 
     @Override
     public void run(){
+        playSound("res\\inform.aiff");
         buffer.test = true;
         buffer.tester = tester;
         Thread.currentThread().setName("real-time test thread");
+        System.out.println("started at "+dtfrmt.format(oldDate));
 /*        try{wait();} //???
         catch(InterruptedException e){}*/
     }
@@ -60,7 +68,7 @@ class RealTimeTesterThread extends Thread {
 
     void newData() {
         date = new Date();
-        if ((date.getTime() - oldDate.getTime() > 1000 * 60 * 5)||(positions.size()==0)) { //once in 30 seconds
+        if ((date.getTime() - oldDate.getTime() > 1000 * 60 * 3)||(positions.size()==0)) { //once in 3 minutes
             int advice = advicer.getAdvice(buffer.getQuotation((short) 5), buffer.getBid());
             switch (advice) {
                 case ADVICE_UP:
@@ -130,6 +138,9 @@ class RealTimeTesterThread extends Thread {
         }
 
         for (Position pos : toClose) { //close once because toClose is HashSet
+            try {
+                sleep(1000 * 10);
+            } catch(InterruptedException e){}
             double profit = 1;
             int cause = 1;
             if (pos.profit(buffer.getBid(), buffer.getAsk()) <= pos.stopLoss) {
@@ -164,6 +175,10 @@ class RealTimeTesterThread extends Thread {
     }
 
     void openPosition(double price, int direction, int money){
+        inform(1, new Position(price, direction, money, 100));
+        try {
+            sleep(1000 * 20);
+        } catch(InterruptedException e){}
         if((balance - money >= 0)&&(balance>=50)) {
             balance -= money;
             positions.add(new Position(price, direction, money, 100));
@@ -175,7 +190,27 @@ class RealTimeTesterThread extends Thread {
 
     /** imitates a closing */
     void closePosition(Position posToClose, int cause){
+        inform(0, posToClose);
         toClose.add(posToClose);
+    }
+
+    void playSound(String path){
+        try {
+            File soundFile = new File(path);
+            AudioInputStream ais = AudioSystem.getAudioInputStream(soundFile);
+            Clip clip = AudioSystem.getClip();
+            clip.open(ais);
+            clip.setFramePosition(0);
+            clip.start();
+        } catch (IOException | UnsupportedAudioFileException | LineUnavailableException exc) {
+            exc.printStackTrace();
+        }
+    }
+
+    public void inform(int action, Position pos) {
+        playSound("res\\inform.aiff");
+        RealTimeInformDialog dialog = new RealTimeInformDialog(ui, action, pos);
+        dialog.setVisible(true);
     }
 
 }

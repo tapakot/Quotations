@@ -59,9 +59,10 @@ public class Worker {
         analyser.setQuotationBuffer(buffer);
         analyser.analyse();
 
-        ui.drawExtremes(analyser.getBuffer().maximums, analyser.getBuffer().minimums);
+        //WARNING no update from this analyser
+        /*ui.drawExtremes(analyser.getBuffer().maximums, analyser.getBuffer().minimums);
         ui.drawResLines(analyser.getBuffer().exLines);
-        ui.drawTrendLines(analyser.getBuffer().trendLines);
+        ui.drawTrendLines(analyser.getBuffer().trendLines);*/
 
         //history test
         /*HistoryTester tester = new HistoryTester(buffer);
