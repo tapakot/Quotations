@@ -1,7 +1,6 @@
 package ui;
 
-import analysis.ResistanceLine;
-import analysis.TrendLine;
+import analysis.*;
 import buffer.QuotationBuffer;
 import common.Quotation;
 import static common.ForexConstants.*;
@@ -22,6 +21,8 @@ class GraphCanvas extends JPanel{
     ArrayList<Double> mins;
     ArrayList<ResistanceLine> resLines;
     ArrayList<TrendLine> trLines;
+    ArrayList<TDSequence> tdSequences;
+    InnerTrendLine innerLine;
 
     //1 pip = 0,00001;
     int height; //height of the visible canvas
@@ -42,6 +43,8 @@ class GraphCanvas extends JPanel{
     /** flag. to draw or not */
     boolean resLines_f;
     boolean trLines_f;
+    boolean tdSequences_f;
+    boolean innerLine_f;
 
     /** initialisation */
     GraphCanvas(QuotationBuffer buffer){
@@ -57,6 +60,8 @@ class GraphCanvas extends JPanel{
 
         extremes_f = false;
         resLines_f = false;
+        tdSequences_f = false;
+        innerLine_f = false;
 
         /*for(int i = 0; i<30; i++){
             System.out.println("Graph["+ i +"]: "+ Quotations.get(i));
@@ -86,7 +91,7 @@ class GraphCanvas extends JPanel{
         }
         averageBar = sum/countOfBars;
         //capacity
-        capacity = averageBar/0.08;
+        capacity = averageBar/0.06;//0.08
         //frequencyOfMarks
         frequencyOfMarks = averageBar/2;
         //lengthOfPip
@@ -201,6 +206,28 @@ class GraphCanvas extends JPanel{
             }
         }
 
+        if(tdSequences_f){
+            g2d.setColor(Color.ORANGE);
+            for(TDSequence seq : tdSequences){
+                for(TDLine line : seq.lines){
+                    int x1 = line.coordinates[0].index-3;
+                    double y1 = line.getY(line.coordinates[0].index-3);
+                    int x2 = line.coordinates[1].index+3;
+                    double y2 = line.getY(line.coordinates[1].index+3);
+                    g2d.drawLine(getX(x1), getY(y1), getX(x2), getY(y2));
+                }
+            }
+        }
+
+        if(innerLine_f){
+            g2d.setColor(Color.ORANGE);
+            int x1 = 0;
+            double y1 = innerLine.getY(x1);
+            int x2 = HIST_COUNT;
+            double y2 = innerLine.getY(x2);
+            g2d.drawLine(getX(x1), getY(y1), getX(x2), getY(y2));
+        }
+
         /*Thread thisThread = Thread.currentThread();
         System.out.println("in canvas.draw (not main!): "+thisThread);*/
     }
@@ -224,6 +251,10 @@ class GraphCanvas extends JPanel{
         return result;
     }
 
+    private int getX(int index){
+        return spaceBetweenBars + (barPeriod * index);
+    }
+
     /** commands to repaint with extremes */
     void drawExtremes(ArrayList<Double> maxs, ArrayList<Double> mins){ //! true/false. analise just before repainting in paintComponent()
         extremes_f = true;
@@ -243,6 +274,18 @@ class GraphCanvas extends JPanel{
     void drawTrendLines(ArrayList<TrendLine> trLines){
         this.trLines = trLines;
         trLines_f = true;
+        repaint();
+    }
+
+    void drawTDSequences(ArrayList<TDSequence> tdSequences){
+        this.tdSequences = tdSequences;
+        tdSequences_f = true;
+        repaint();
+    }
+
+    void drawInnerLine(InnerTrendLine innerLine){
+        this.innerLine = innerLine;
+        innerLine_f = true;
         repaint();
     }
 }

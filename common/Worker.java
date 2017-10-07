@@ -60,9 +60,9 @@ public class Worker {
         analyser.analyse();
 
         //WARNING no update from this analyser
-        /*ui.drawExtremes(analyser.getBuffer().maximums, analyser.getBuffer().minimums);
-        ui.drawResLines(analyser.getBuffer().exLines);
-        ui.drawTrendLines(analyser.getBuffer().trendLines);*/
+        ui.drawExtremes(analyser.getBuffer().maximums, analyser.getBuffer().minimums);
+        ui.getFrame().drawInnerLine(analyser.getBuffer().innerTrendLine);
+        ui.getFrame().drawTDSequences(analyser.getBuffer().tdSequences);
 
         //history test
         /*HistoryTester tester = new HistoryTester(buffer);

@@ -51,7 +51,19 @@ public class Analyser {
         switch(cmd){
             case "extremes": Extreme.analyseForExtremes(this);
                 break;
-            case "trendLines": TrendLine.analyseForTrendLines(this);
+            case "trendLines":
+                Extreme.analyseForExtremes(this);
+                TrendLine.analyseForTrendLines(this);
+                break;
+            case "relExtremes": RelativeExtreme.analyseForRelExtremes(this, WIDTH_OF_REL_EX);
+                break;
+            case "TDSequence":
+                RelativeExtreme.analyseForRelExtremes(this, WIDTH_OF_REL_EX);
+                TDSequence.analyseForTDSequence(this);
+                break;
+            case "InnerLines":
+                RelativeExtreme.analyseForRelExtremes(this, WIDTH_OF_REL_EX);
+                InnerTrendLine.analyseForInnerTrendLine(this);
                 break;
         }
     }
@@ -59,6 +71,9 @@ public class Analyser {
     public void analyse(){
         Extreme.analyseForExtremes(this);
         TrendLine.analyseForTrendLines(this);
+        RelativeExtreme.analyseForRelExtremes(this, WIDTH_OF_REL_EX);
+        TDSequence.analyseForTDSequence(this);
+        InnerTrendLine.analyseForInnerTrendLine(this);
     }
 
     /** returns a buffer with values of indicators */

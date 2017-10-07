@@ -1,5 +1,6 @@
 package ui;
 
+import analysis.InnerTrendLine;
 import buffer.QuotationBuffer;
 
 import javax.swing.*;
@@ -72,6 +73,10 @@ public class MainFrame extends JFrame{
     }
 
     public void drawTrendLines(ArrayList trLines) { graphCanvas.drawTrendLines(trLines);}
+
+    public void drawTDSequences(ArrayList tdSequences) { graphCanvas.drawTDSequences(tdSequences);}
+
+    public void drawInnerLine(InnerTrendLine innerLine) { graphCanvas.drawInnerLine(innerLine);}
 
     /** managing panel of positions. sets new pos-s instead of old ones. */
     public void setPositions(ArrayList pos){ posPanel.setPositions(pos); }

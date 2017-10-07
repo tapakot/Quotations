@@ -46,7 +46,9 @@ class RealTimeTesterThread extends Thread {
         anBuffer = advicer.getAnBuffer();
         ui.drawExtremes(advicer.getAnBuffer().maximums, advicer.getAnBuffer().minimums);
         ui.drawResLines(advicer.getAnBuffer().exLines);
-        ui.drawTrendLines(advicer.getAnBuffer().trendLines);
+        //ui.drawTrendLines(advicer.getAnBuffer().trendLines);
+        ui.drawTDSequences(advicer.getAnBuffer().tdSequences);
+        ui.drawInnerLine(advicer.getAnBuffer().innerTrendLine);
         ui.repaint();
         dtfrmt = new SimpleDateFormat("HH:mm");
     }
