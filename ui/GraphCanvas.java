@@ -2,7 +2,8 @@ package ui;
 
 import analysis.*;
 import buffer.QuotationBuffer;
-import common.Quotation;
+import common.*;
+
 import static common.ForexConstants.*;
 
 import javax.swing.*;
@@ -23,6 +24,7 @@ class GraphCanvas extends JPanel{
     ArrayList<TrendLine> trLines;
     ArrayList<TDSequence> tdSequences;
     InnerTrendLine innerLine;
+    ArrayList<MovingAverage> movingAverages;
 
     //1 pip = 0,00001;
     int height; //height of the visible canvas
@@ -45,6 +47,7 @@ class GraphCanvas extends JPanel{
     boolean trLines_f;
     boolean tdSequences_f;
     boolean innerLine_f;
+    boolean movingAverages_f;
 
     /** initialisation */
     GraphCanvas(QuotationBuffer buffer){
@@ -219,13 +222,26 @@ class GraphCanvas extends JPanel{
             }
         }
 
-        if(innerLine_f){
+        if(innerLine_f && innerLine!=null){
             g2d.setColor(Color.ORANGE);
             int x1 = 0;
             double y1 = innerLine.getY(x1);
             int x2 = HIST_COUNT;
             double y2 = innerLine.getY(x2);
             g2d.drawLine(getX(x1), getY(y1), getX(x2), getY(y2));
+        }
+
+        if(movingAverages_f){
+            g2d.setColor(Color.GREEN);
+            for(MovingAverage movingAverage : movingAverages){
+                for(int i = 0; i<movingAverage.values.size()-2; i++){
+                    int x1 = (int)movingAverage.values.get(i).getX();
+                    double y1 = movingAverage.values.get(i).getY();
+                    int x2 = (int)movingAverage.values.get(i+1).getX();
+                    double y2 = movingAverage.values.get(i+1).getY();
+                    g2d.drawLine(getX(x1), getY(y1), getX(x2), getY(y2));
+                }
+            }
         }
 
         /*Thread thisThread = Thread.currentThread();
@@ -288,4 +304,11 @@ class GraphCanvas extends JPanel{
         innerLine_f = true;
         repaint();
     }
+
+    void drawMA(ArrayList<MovingAverage> movingAverages){
+        this.movingAverages = movingAverages;
+        movingAverages_f = true;
+        repaint();
+    }
+
 }

@@ -1,6 +1,7 @@
 package ui;
 
 import analysis.InnerTrendLine;
+import analysis.MovingAverage;
 import buffer.QuotationBuffer;
 
 import javax.swing.*;
@@ -77,6 +78,8 @@ public class MainFrame extends JFrame{
     public void drawTDSequences(ArrayList tdSequences) { graphCanvas.drawTDSequences(tdSequences);}
 
     public void drawInnerLine(InnerTrendLine innerLine) { graphCanvas.drawInnerLine(innerLine);}
+
+    public void drawMA(ArrayList<MovingAverage> movingAverages) { graphCanvas.drawMA(movingAverages);}
 
     /** managing panel of positions. sets new pos-s instead of old ones. */
     public void setPositions(ArrayList pos){ posPanel.setPositions(pos); }

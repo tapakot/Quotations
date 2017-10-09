@@ -65,6 +65,8 @@ public class Analyser {
                 RelativeExtreme.analyseForRelExtremes(this, WIDTH_OF_REL_EX);
                 InnerTrendLine.analyseForInnerTrendLine(this);
                 break;
+            case "MA":
+                anBuffer.movingAverages.add(new MovingAverage(this, DEFAULT_MA));
         }
     }
 
@@ -84,6 +86,10 @@ public class Analyser {
     /** clears all indicators. preparation for analysing new collection of quotations */
     public void clearBuffer(){
         anBuffer.clean();
+    }
+
+    public void analyseForMA(int length){
+        anBuffer.movingAverages.add(new MovingAverage(this, length));
     }
 
 }

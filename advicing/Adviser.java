@@ -38,6 +38,7 @@ public class Adviser {
         analyser.setQuotationBuffer(forAdvice100);
         analyser.clearBuffer();
         analyser.analyse();
+        analyser.analyseForMA(8);
         anBuffer = analyser.getBuffer();
 
         int advice = ADVICE_STAY;

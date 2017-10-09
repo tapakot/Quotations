@@ -1,5 +1,7 @@
 package common;
 
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 /** Class of constants.
  * Those constants are used in other classes.
  * Cannot be changed by user.
@@ -38,6 +40,7 @@ public class ForexConstants {
     public static double EX_SENS_2;//defines sensitivity to extremes (for finding)
     public static double EX_SENS_5;
     public static int WIDTH_OF_REL_EX;
+    public static int DEFAULT_MA;
 
 
     //coefficient of indicator for adviser
@@ -86,6 +89,7 @@ public class ForexConstants {
         EX_SENS_2 = Double.parseDouble(Settings.properties.getProperty(sec+".EX_SENS_2"));
         EX_SENS_5 = Double.parseDouble(Settings.properties.getProperty(sec+".EX_SENS_5"));
         WIDTH_OF_REL_EX = (int)Double.parseDouble(Settings.properties.getProperty(sec+".WIDTH_OF_REL_EX"));
+        DEFAULT_MA = (int)Double.parseDouble(Settings.properties.getProperty(sec+".DEFAULT_MA"));
 
         sec = "ui";
         WIDTH_OF_BAR = (int)Double.parseDouble(Settings.properties.getProperty(sec+".WIDTH_OF_BAR"));
