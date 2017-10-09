@@ -39,6 +39,7 @@ public class Adviser {
         analyser.clearBuffer();
         analyser.analyse();
         analyser.analyseForMA(8);
+        analyser.analyseForMA(12);
         anBuffer = analyser.getBuffer();
 
         int advice = ADVICE_STAY;

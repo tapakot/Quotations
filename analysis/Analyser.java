@@ -30,6 +30,7 @@ public class Analyser {
     /** sets QuotationBuffer to be analyse */
     public void setQuotationBuffer(QuotationBuffer buffer){     //separated method because it can be test/history/real
         this.buffer = buffer;
+        toAn.clear();
         for(int i=0; i<HIST_COUNT; i++){
             toAnalyse[0][i] = buffer.getQuotation((short)5, i).high;
             toAnalyse[1][i] = buffer.getQuotation((short)5, i).low;
@@ -39,6 +40,7 @@ public class Analyser {
 
     /** sets a buffer to be analysed by List of quotations */
     public void setQuotationBuffer(List<Quotation> buffer100){
+        toAn.clear();
         for(int i=0; i<HIST_COUNT; i++){ //99
             toAnalyse[0][i] = buffer100.get(i).high;
             toAnalyse[1][i] = buffer100.get(i).low;
