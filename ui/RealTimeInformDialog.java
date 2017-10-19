@@ -11,9 +11,15 @@ import static common.ForexConstants.UP_DIRECTION;
 
 public class RealTimeInformDialog extends JDialog implements ActionListener{
     JButton okButton;
+    MainFrame owner;
+    int action;
+    Position pos;
 
     public RealTimeInformDialog(MainFrame owner, int action, Position pos){
         super(owner,"inform", true);
+        this.owner = owner;
+        this.action = action;
+        this.pos = pos;
         SimpleDateFormat dtfrmt = new SimpleDateFormat("HH:mm");
         String message = "";
         if(action == 0){

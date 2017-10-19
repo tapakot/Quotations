@@ -6,6 +6,7 @@ import buffer.QuotationBuffer;
 import common.Position;
 import ui.MainFrame;
 import ui.RealTimeInformDialog;
+import ui.RealTimeInformDialogThread;
 import ui.UiThread;
 
 import javax.sound.sampled.*;
@@ -45,7 +46,7 @@ class RealTimeTesterThread extends Thread {
         balance = START_BALANCE;
         anBuffer = advicer.getAnBuffer();
         ui.drawExtremes(advicer.getAnBuffer().maximums, advicer.getAnBuffer().minimums);
-        ui.drawResLines(advicer.getAnBuffer().exLines);
+        //ui.drawResLines(advicer.getAnBuffer().exLines);
         //ui.drawTrendLines(advicer.getAnBuffer().trendLines);
         ui.drawTDSequences(advicer.getAnBuffer().tdSequences);
         ui.drawInnerLine(advicer.getAnBuffer().innerTrendLine);
@@ -212,8 +213,8 @@ class RealTimeTesterThread extends Thread {
 
     public void inform(int action, Position pos) {
         playSound("res\\inform.aiff");
-        RealTimeInformDialog dialog = new RealTimeInformDialog(ui, action, pos);
-        dialog.setVisible(true);
+        RealTimeInformDialogThread dialogThread = new RealTimeInformDialogThread(ui, action, pos);
+        dialogThread.start();
     }
 
 }

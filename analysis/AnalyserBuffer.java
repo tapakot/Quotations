@@ -29,6 +29,7 @@ public class AnalyserBuffer {
         relHighs = new ArrayList<RelativeExtreme>();
         relLows = new ArrayList<RelativeExtreme>();
         tdSequences = new ArrayList<TDSequence>();
+        innerTrendLine = new InnerTrendLine(0, 0);
         movingAverages = new ArrayList<MovingAverage>();
     }
 
@@ -42,7 +43,7 @@ public class AnalyserBuffer {
         relHighs.clear();
         relLows.clear();
         tdSequences.clear();
-        innerTrendLine = null;
+        innerTrendLine.change(0, 0);
         movingAverages.clear();
     }
 }

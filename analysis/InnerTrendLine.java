@@ -19,6 +19,12 @@ public class InnerTrendLine {
         up = a>0;
     }
 
+    void change(double a, double b){
+        this.a = a;
+        this.b = b;
+        up = a>0;
+    }
+
     public boolean isCovering(int x, double value){
         boolean covered = false;
         if((value < x*a + b + TREND_LINE_SENS) && (value > x*a + b - TREND_LINE_SENS)){
@@ -39,6 +45,6 @@ public class InnerTrendLine {
             points.add(point);
         }
         double[] resultOfApp = Mathematics.approximate(points);
-        owner.getBuffer().innerTrendLine = new InnerTrendLine(resultOfApp[0], resultOfApp[1]);
+        owner.getBuffer().innerTrendLine.change(resultOfApp[0], resultOfApp[1]); //should be the same object to draw
     }
 }
