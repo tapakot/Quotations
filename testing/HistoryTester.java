@@ -19,7 +19,7 @@ public class HistoryTester {
     private ArrayList<Position> positions;
     private HashSet<Position> toClose;
     private int currentIndex;
-    private ArrayList<Quotation> bufferAll;
+    private ArrayList<Quotation> bufferAll5;
     private int upCounter;
     private int downCounter;
     private boolean closed;
@@ -40,14 +40,14 @@ public class HistoryTester {
         //preparing
         Adviser adviser = new Adviser();
         currentIndex = HIST_COUNT; //0-99 are analysed. 100th is the first to get advice about
-        bufferAll = buffer.history;
+        bufferAll5 = buffer.history5;
 
 
-        while(currentIndex < buffer.countHistory) {
-            List<Quotation> buffer100 = bufferAll.subList(currentIndex - HIST_COUNT, currentIndex); //in, ex (0-99)
-            Quotation currentQuo = bufferAll.get(currentIndex);
+        while(currentIndex < buffer.countHistory5) {
+            List<Quotation> buffer100 = bufferAll5.subList(currentIndex - HIST_COUNT, currentIndex); //in, ex (0-99)
+            Quotation currentQuo = bufferAll5.get(currentIndex);
             int advice = adviser.getAdvice(buffer100, currentQuo);
-            double nextOpen = bufferAll.get(currentIndex + 1).open;
+            double nextOpen = bufferAll5.get(currentIndex + 1).open;
             double curLow = currentQuo.low;
             closed = false;
             //handling
@@ -172,7 +172,7 @@ public class HistoryTester {
 
     /** imitates a closing */
     private void closePosition(Position posToClose, int cause){    // wrong!!! (why?) twice profit
-        if(currentIndex!=buffer.countHistory) { //right. countHistory from 0 as well as curIndex.
+        if(currentIndex!=buffer.countHistory5) { //right. countHistory from 0 as well as curIndex.
 
             toClose.add(posToClose);
             /*System.out.print("Position closed at " + nextOpen + ". was opened at " + posToClose.price + ". Profit: " + profit);

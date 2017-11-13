@@ -6,10 +6,10 @@ public class Quotation {
     public double high = 0;
     public double low = 0;
     public double close = 0;
-    public short period = 5;
+    public int period = 5;
 
     /** creates a new one */
-    public Quotation(double open, double high, double low, double close, short period){
+    public Quotation(double open, double high, double low, double close, int period){
         this.open = open;
         this.high = high;
         this.low = low;
@@ -18,7 +18,7 @@ public class Quotation {
     }
 
     /** creates a new one with zero params*/
-    public Quotation(short period){
+    public Quotation(int period){
         this.period = period;
     }
 

@@ -11,6 +11,8 @@ import java.util.ArrayList;
 public class UiThread extends Thread {
     MainFrame frame;
     volatile QuotationBuffer buffer;
+    volatile QuotationBuffer buffer2;
+
 
     /** flag. true when User Interface was generated */
     volatile public boolean frameIsReady;
@@ -18,6 +20,7 @@ public class UiThread extends Thread {
     /** initialising */
     public UiThread(QuotationBuffer buffer){
         this.buffer = buffer;
+        //this.buffer2 = buffer2;
         frameIsReady = false;
     }
 

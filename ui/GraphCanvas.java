@@ -5,6 +5,7 @@ import buffer.QuotationBuffer;
 import common.*;
 
 import static common.ForexConstants.*;
+import static common.Mathematics.round;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 class GraphCanvas extends JPanel{
     Graphics2D g2d;
     QuotationBuffer buffer;
+    int period; //5, 15, 30, 60, 1440
     /** 100 last quotations (to draw) */
     ArrayList<Quotation> Quotations; //last
     ArrayList<Double> maxs;
@@ -50,15 +52,16 @@ class GraphCanvas extends JPanel{
     boolean movingAverages_f;
 
     /** initialisation */
-    GraphCanvas(QuotationBuffer buffer){
+    GraphCanvas(QuotationBuffer buffer, int period){
         setMinimumSize(new Dimension(700, 400));
         setPreferredSize(getMinimumSize());
         this.buffer = buffer;
+        this.period = period;
         Quotations = new ArrayList<>();
         countOfBars = HIST_COUNT-1;
         for(int i= 0; i<countOfBars; i++){
             // should be changed by realTimeEvent
-            Quotations.add(buffer.getQuotation((short)5, HIST_COUNT-countOfBars-1+i)); //in the end but not the last one (unpredictable)
+            Quotations.add(buffer.getQuotation(period, HIST_COUNT-countOfBars-1+i)); //in the end but not the last one (unpredictable)
         }
 
         extremes_f = false;
@@ -248,18 +251,6 @@ class GraphCanvas extends JPanel{
         System.out.println("in canvas.draw (not main!): "+thisThread);*/
     }
 
-    /** rounds an argument. math. */
-    double round(double d, int digitsAfterComma){
-        int mult =1;
-        for(int i=0; i<digitsAfterComma; i++){
-            mult*=10;
-        }
-        d = d * mult;
-        int i = (int)Math.round(d);
-        d = (double) i/mult;
-        return d;
-    }
-
     /** returns Y value on canvas of the value given in pips */
     private int getY(double value){ //counting the Y for drawing lines by value of quotation
         int result;
@@ -269,6 +260,14 @@ class GraphCanvas extends JPanel{
 
     private int getX(int index){
         return spaceBetweenBars + (barPeriod * index);
+    }
+
+    void realTimeEvent(int counter){
+        if(counter%period == 0){
+            Quotations.remove(0);
+            Quotations.add(buffer.getQuotation(period, HIST_COUNT-1));
+            repaint();
+        }
     }
 
     /** commands to repaint with extremes */

@@ -58,12 +58,9 @@ class RealTimeTesterThread extends Thread {
     @Override
     public void run(){
         playSound("res\\inform.aiff");
-        buffer.test = true;
-        buffer.tester = tester;
+        buffer.startRTTest(tester);
         Thread.currentThread().setName("real-time test thread");
         System.out.println("started at "+dtfrmt.format(oldDate));
-/*        try{wait();} //???
-        catch(InterruptedException e){}*/
     }
 
     void stopThread(){

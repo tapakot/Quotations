@@ -27,7 +27,7 @@ public class Analyser {
         toAn = new ArrayList<Quotation>();
     }
 
-    /** sets QuotationBuffer to be analyse */
+    /** sets QuotationBuffer to be analysed */
     public void setQuotationBuffer(QuotationBuffer buffer){     //separated method because it can be test/history/real
         this.buffer = buffer;
         toAn.clear();

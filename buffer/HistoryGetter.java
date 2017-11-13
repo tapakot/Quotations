@@ -15,9 +15,9 @@ class HistoryGetter {
     /** returns last 100 quotations of particular period.
      * gets them from .xls file.
      */
-    ArrayList<Quotation> getHistoryOf(short period){      //uses apache.POI to work with CLOSED excel files
+    static ArrayList<Quotation> getHistoryOf(String name, int period){      //uses apache.POI to work with CLOSED excel files
         ArrayList<Quotation> list = new ArrayList<>();
-        String path = "res\\EURUSD"+ period+".xls";
+        String path = "res\\"+ name + period+".xls";
         InputStream in = null; //probably not the best way to read. see InStreams vs. Files
         Workbook wb = null;
         try {
@@ -53,9 +53,9 @@ class HistoryGetter {
     /** returns all 5-min quotations.
      * for history test. sets countHistory in buffer manager.
      */
-    ArrayList<Quotation> getHistory(QuotationBuffer buffer){
+    static ArrayList<Quotation> getHistory(QuotationBuffer buffer, int period){
         ArrayList<Quotation> list = new ArrayList<>();
-        String path = "res\\EURUSD5.xls";
+        String path = "res\\"+buffer.name+period+".xls";
         InputStream in = null; //probably not the best way to read. see InStreams vs. Files
         Workbook wb = null;
         try {
@@ -65,7 +65,9 @@ class HistoryGetter {
         catch (FileNotFoundException e){System.out.println("!!! Check the path to the History !!!");}
         catch (IOException e){System.out.println("!!! IOExeption while reading History !!!");}
         Sheet sheet = wb.getSheetAt(0);
-        buffer.countHistory = sheet.getLastRowNum();
+        if(period==5) {
+            buffer.countHistory5 = sheet.getLastRowNum();
+        }
         for(int rowNum = 0; rowNum <= sheet.getLastRowNum(); rowNum++){
             Row row = sheet.getRow(rowNum);
             Quotation quo = new Quotation((short) 5);
@@ -90,9 +92,9 @@ class HistoryGetter {
     /** returns any quotation from .xls file.
      * needs too much time to execute.
      */
-    Quotation getOne(short period, int index){
+    static Quotation getOne(String name, int period, int index){
         Quotation quo = new Quotation(period);
-        String path = "res\\EURUSD"+ period+".xls";
+        String path = "res\\"+name+ period+".xls";
         InputStream in = null; //probably not the best way to read. see InStreams vs. Files
         Workbook wb = null;
         try {

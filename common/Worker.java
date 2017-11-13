@@ -22,6 +22,7 @@ import java.util.Set;
 public class Worker {
     /** buffer to manage */
     volatile QuotationBuffer buffer;
+    volatile QuotationBuffer buffer2;
     /** main frame of User Interface */
     public static MainFrame mainFrame;
 
@@ -43,9 +44,10 @@ public class Worker {
         }
 
         //start buffer. wait for it
-        buffer = new QuotationBuffer();
-        buffer.startThread(this);
+        buffer = new QuotationBuffer("EURUSD", this);
         while (!buffer.isReady){}   //waits for buffer initialisation
+        buffer2 = new QuotationBuffer("AUDUSD", this);
+        while (!buffer2.isReady){}   //waits for buffer initialisation
 
         //start UI
         UiThread ui = new UiThread(buffer);
@@ -53,6 +55,7 @@ public class Worker {
         do{}while (!ui.frameIsReady);
         mainFrame = ui.getFrame();
 
+        mainFrame.addBuffer(buffer2);
 
         //start analyser. FOR TESTS ONLY
         Analyser analyser = new Analyser();
@@ -82,7 +85,7 @@ public class Worker {
      }
 
     /** inform worker about new information from buffer. */
-    public void realTimeEvent(){
-        mainFrame.realTimeEvent();
+    public void realTimeEvent(String nameOfBuffer, int counter){
+        mainFrame.realTimeEvent(nameOfBuffer, counter);
     }
 }

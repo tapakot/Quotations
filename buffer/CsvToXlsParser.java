@@ -16,11 +16,11 @@ class CsvToXlsParser {
      * parses the file of particular period.
      * @param period
      */
-    public static void parse(short period){
+    public static void parse(String name, int period){
         ArrayList cells = null;
         ArrayList rows = new ArrayList();
-        String pathSource = "res\\EURUSD" + period + ".csv";
-        String pathDest = "res\\EURUSD" + period + ".xls";
+        String pathSource = "res\\"+name + period + ".csv";
+        String pathDest = "res\\"+name + period + ".xls";
         String thisLine = null;
         FileInputStream fin = null;
         try {
