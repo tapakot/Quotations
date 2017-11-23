@@ -1,5 +1,7 @@
 package ui;
 
+import advicing.Adviser;
+import analysis.Analyser;
 import analysis.InnerTrendLine;
 import analysis.MovingAverage;
 import buffer.QuotationBuffer;
@@ -21,6 +23,8 @@ public class MainFrame extends JFrame{
     static QuotationBuffer buffer;
     static ArrayList<QuotationBuffer> buffers;
     static ArrayList<GraphCanvas> canvases;
+    static Analyser analyser;
+    static Adviser adviser;
 
 
     Box center;
@@ -104,41 +108,55 @@ public class MainFrame extends JFrame{
         repaint();
     }
 
+    public void setAnalyser(Analyser an){
+        analyser = an;
+    }
+
+    public void setAdviser(Adviser ad){
+        adviser = ad;
+    }
+
+    public void linkAll(){
+        for(GraphCanvas gc : canvases){
+            gc.findAnBuffer();
+        }
+    }
+
     /** managing graph canvas. draws extremes. */
-    public void drawExtremes(ArrayList maxs, ArrayList mins){
+    public void drawExtremes(boolean draw){
         for(GraphCanvas gc : canvases) {
-            gc.drawExtremes(maxs, mins);
+            gc.drawExtremes(draw);
         }
     }
 
     /** managing graph canvas. draws resistance lines */
-    public void drawResLines(ArrayList resLines){
+    public void drawResLines(boolean draw){
         for(GraphCanvas gc : canvases) {
-            gc.drawResLines(resLines);
+            gc.drawResLines(draw);
         }
     }
 
-    public void drawTrendLines(ArrayList trLines) {
+    public void drawTrendLines(boolean draw) {
         for (GraphCanvas gc : canvases) {
-            gc.drawTrendLines(trLines);
+            gc.drawTrendLines(draw);
         }
     }
 
-    public void drawTDSequences(ArrayList tdSequences) {
+    public void drawTDSequences(boolean draw) {
         for(GraphCanvas gc : canvases) {
-            gc.drawTDSequences(tdSequences);
+            gc.drawTDSequences(draw);
         }
     }
 
-    public void drawInnerLine(InnerTrendLine innerLine) {
+    public void drawInnerLine(boolean draw) {
         for (GraphCanvas gc : canvases) {
-            gc.drawInnerLine(innerLine);
+            gc.drawInnerLine(draw);
         }
     }
 
-    public void drawMA(ArrayList<MovingAverage> movingAverages) {
+    public void drawMA(boolean draw) {
         for(GraphCanvas gc : canvases) {
-            gc.drawMA(movingAverages);
+            gc.drawMA(draw);
         }
     }
 

@@ -80,7 +80,7 @@ class DDEListener implements DDEClientEventListener{
                     }
                 }
                 if (buffer.test) {
-                    buffer.tester.newData();
+                    buffer.tester.newData(buffer.name);
                 }
                 prevMinute = minute;
                 prevBid = bid;

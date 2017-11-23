@@ -8,6 +8,7 @@ import static common.ForexConstants.*;
 
 /** Represents a ForEx position.  */
 public class Position {
+    public String instrument;
     public int direction;
     public int money;
     public double price;
@@ -18,11 +19,13 @@ public class Position {
     public double allMoney;
 
     /** creates new position
+     * @param instrument name of the instrument (EURUSD)
      * @param price a price, where position was created
      * @param direction up or down
      * @param money volume of position in USD
      */
-    public Position(double price, int direction, int money, int takeProfit){
+    public Position(String instrument, double price, int direction, int money, int takeProfit){
+        this.instrument = instrument;
         this.price = price;
         this.direction = direction;
         if(money<500){
@@ -35,7 +38,7 @@ public class Position {
         this.takeProfit = money*TAKE_PROFIT;
         stopLoss = -money/STOP_LOSS_DIVIDER;
         commission = money * COMMISSION;
-        allMoney = money * 500;
+        allMoney = money * MULTIPLIERS.get(instrument);
         date = new Date();
     }
 

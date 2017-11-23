@@ -1,5 +1,6 @@
 package common;
 
+import advicing.Adviser;
 import buffer.QuotationBuffer;
 import com.sun.awt.AWTUtilities;
 import common.Quotation;
@@ -49,23 +50,32 @@ public class Worker {
         buffer2 = new QuotationBuffer("AUDUSD", this);
         while (!buffer2.isReady){}   //waits for buffer initialisation
 
+        //start analyser
+        Analyser analyser = new Analyser(buffer);
+        analyser.addBuffer(buffer2);
+
+        //start advicer
+        Adviser adviser = new Adviser(analyser);
+
         //start UI
         UiThread ui = new UiThread(buffer);
         ui.start();
         do{}while (!ui.frameIsReady);
         mainFrame = ui.getFrame();
-
+        mainFrame.setAnalyser(analyser);
+        mainFrame.setAdviser(adviser);
         mainFrame.addBuffer(buffer2);
 
-        //start analyser. FOR TESTS ONLY
-        Analyser analyser = new Analyser();
-        analyser.setQuotationBuffer(buffer);
-        analyser.analyse();
+        mainFrame.linkAll();
 
-        //WARNING no update from this analyser
-        ui.drawExtremes(analyser.getBuffer().maximums, analyser.getBuffer().minimums);
-        ui.getFrame().drawInnerLine(analyser.getBuffer().innerTrendLine);
-        ui.getFrame().drawTDSequences(analyser.getBuffer().tdSequences);
+        mainFrame.drawExtremes(true);
+        mainFrame.drawResLines(true);
+        mainFrame.drawTrendLines(true);
+        mainFrame.drawTDSequences(true);
+        mainFrame.drawInnerLine(true);
+        mainFrame.drawMA(true);
+
+
 
         //history test
         /*HistoryTester tester = new HistoryTester(buffer);
@@ -80,8 +90,8 @@ public class Worker {
 
 
         //real-time test
-        //RealTimeTester rtTester = new RealTimeTester(buffer, ui);
-        //rtTester.test();
+        /*RealTimeTester rtTester = new RealTimeTester(mainFrame, adviser);
+        rtTester.test();*/
      }
 
     /** inform worker about new information from buffer. */

@@ -42,19 +42,5 @@ public class UiThread extends Thread {
         frame.setVisible(true); //ought to control visibility from main class
     }
 
-    /** managing main frame. draws extremes. */
-    public void drawExtremes(ArrayList maxs, ArrayList mins){
-        frame.drawExtremes(maxs, mins);
-    }
-
-    /** managing main frame. draws resistance lines */
-    public void drawResLines(ArrayList resLines){
-        frame.drawResLines(resLines);
-    }
-
-    public void drawTrendLines(ArrayList trLines) {
-        frame.drawTrendLines(trLines);
-    }
-
     public void newBid(){ frame.newBid();}
 }

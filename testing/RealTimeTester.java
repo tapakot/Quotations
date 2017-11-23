@@ -10,29 +10,28 @@ import advicing.*;
  * Manages the whole test.
  */
 public class RealTimeTester {
-    QuotationBuffer buffer;
     MainFrame ui;
     RealTimeTesterThread RTthread;
+    Adviser adviser;
 
     /** initialising.
-     * @param buffer to be analysed and get new data from
      * @param ui where to show opened positions
      */
-    public RealTimeTester(QuotationBuffer buffer, MainFrame ui){
-        this.buffer = buffer;
+    public RealTimeTester(MainFrame ui, Adviser adviser){
         this.ui = ui;
+        this.adviser = adviser;
     }
 
     /** main method. manages the test.
      * an endless test until stopTest().
      */
     public void test(){
-        RTthread = new RealTimeTesterThread(buffer, ui, this);
+        RTthread = new RealTimeTesterThread(ui, this, adviser);
         RTthread.start();
     }
 
-    public void newData(){
-        RTthread.newData();
+    public void newData(String instrumentName){
+        RTthread.newData(instrumentName);
         ui.newBid();
     }
 

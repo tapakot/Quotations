@@ -1,13 +1,13 @@
 package analysis;
 
 import java.util.ArrayList;
+
+import buffer.QuotationBuffer;
 import common.*;
 
 import static common.ForexConstants.*;
 
 public class TrendLine {
-    static Analyser owner;
-
     public ArrayList<Point> coordinates;
     public double a, b; //x1*a+b=y1; x2*a+b=y2;
     public int power;
@@ -49,8 +49,7 @@ public class TrendLine {
         return x*a+b;
     }
 
-    static void analyseForTrendLines(Analyser analyser){
-        owner = analyser;
+    static void analyseForTrendLines(ArrayList<Quotation> toAn, AnalyserBuffer anBuffer){
         ArrayList<TrendLine> TLList = new ArrayList<TrendLine>();
         //test
         /*System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
@@ -73,7 +72,7 @@ public class TrendLine {
         boolean minBigger = false; //true when now is bigger than previous
         boolean minSmaller = false;
         boolean covered = false;
-        for(Extreme ex : owner.anBuffer.extremes){
+        for(Extreme ex : anBuffer.extremes){
             covered = false;
             if((preMax == null)&&(ex.max)){
                 preMax2 = preMax;
@@ -163,24 +162,24 @@ public class TrendLine {
             for(int i = (int)tl.coordinates.get(0).getX(); i<HIST_COUNT; i++){
                 if(tl.up){ //for up lines getting over down
                     //2nd closing
-                    if((owner.toAn.get(i).close < tl.getY(i))&&(!tl.isCovering(i, owner.toAn.get(i).close))){
-                        if((owner.toAn.get(i).close < tl.getY(i))&&(!tl.isCovering(i, owner.toAn.get(i).close))){
+                    if((toAn.get(i).close < tl.getY(i))&&(!tl.isCovering(i, toAn.get(i).close))){
+                        if((toAn.get(i).close < tl.getY(i))&&(!tl.isCovering(i, toAn.get(i).close))){
                             toDelete.add(tl);
                         }
                     }
                     //big difference
-                    if(owner.toAn.get(i).low * OVER_TREND_LINE < tl.getY(i)){
+                    if(toAn.get(i).low * OVER_TREND_LINE < tl.getY(i)){
                         toDelete.add(tl);
                     }
                 } else { //for down lines getting over up
                     //2nd closing
-                    if((owner.toAn.get(i).close > tl.getY(i))&&(!tl.isCovering(i, owner.toAn.get(i).close))){
-                        if((owner.toAn.get(i).close > tl.getY(i))&&(!tl.isCovering(i, owner.toAn.get(i).close))){
+                    if((toAn.get(i).close > tl.getY(i))&&(!tl.isCovering(i, toAn.get(i).close))){
+                        if((toAn.get(i).close > tl.getY(i))&&(!tl.isCovering(i, toAn.get(i).close))){
                             toDelete.add(tl);
                         }
                     }
                     //big difference
-                    if(owner.toAn.get(i).low / OVER_TREND_LINE > tl.getY(i)){
+                    if(toAn.get(i).low / OVER_TREND_LINE > tl.getY(i)){
                         toDelete.add(tl);
                     }
                 }
@@ -193,7 +192,7 @@ public class TrendLine {
 
 
         for(TrendLine tl : TLList) {
-            owner.anBuffer.trendLines.add(tl);
+            anBuffer.trendLines.add(tl);
         }
 
         //test. printing all trend lines
@@ -212,5 +211,56 @@ public class TrendLine {
         }
         System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++");
         */
+    }
+
+    public static double getAdviceFor(Analyser analyser, String instrumentName, Quotation quo){
+        int firstAnBuf;
+        int indexOfBuffer = -1;
+        for(QuotationBuffer buf : analyser.buffers){
+            if(buf.name.equals(instrumentName)){
+                indexOfBuffer = analyser.buffers.indexOf(buf);
+            }
+        }
+        firstAnBuf = indexOfBuffer*PERIODS.size();
+        AnalyserBuffer anBuffer = analyser.anBuffers.get(firstAnBuf);
+
+        ArrayList<Quotation> history = analyser.buffers.get(indexOfBuffer).history5;
+        int last = HIST_COUNT-1;
+
+        double advice = ADVICE_STAY;
+        for(TrendLine tl : anBuffer.trendLines){
+            Quotation historyLast = history.get(history.size()-1);
+            if(tl.up) {
+                //getting over
+                if ((historyLast.close < tl.getY(last)) && (!tl.isCovering(last, historyLast.close))) {
+                    if ((quo.close) < tl.getY(last-1)&&(!tl.isCovering(last-1, quo.close))){
+                        return ADVICE_CLOSE_UP * ADV_TREND_LINES;
+                    }
+                }
+                if (quo.low * OVER_TREND_LINE < tl.getY(last+1)) {
+                    return ADVICE_CLOSE_UP * ADV_TREND_LINES;
+                }
+                //covering
+                if(tl.isCovering(last+1, quo.close)){
+                    return ADVICE_UP * ADV_TREND_LINES;
+                }
+            } else {
+                //getting over
+                if ((historyLast.close > tl.getY(last)) && (!tl.isCovering(last, historyLast.close))) {
+                    if ((quo.close) > tl.getY(last+1)&&(!tl.isCovering(last+1, quo.close))){
+                        return ADVICE_CLOSE_DOWN * ADV_TREND_LINES;
+                    }
+                }
+                if (quo.low / OVER_TREND_LINE > tl.getY(last+1)) {
+                    return ADVICE_CLOSE_DOWN * ADV_TREND_LINES;
+                }
+                //covering
+                if(tl.isCovering(last+1, quo.close)){
+                    return ADVICE_DOWN * ADV_TREND_LINES;
+                }
+            }
+        }
+
+        return advice * ADV_TREND_LINES;
     }
 }

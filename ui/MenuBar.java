@@ -54,7 +54,7 @@ class MenuBar extends JMenuBar {
         realTimeTest.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                RealTimeTester tester = new RealTimeTester(bufferFinal, frameOwner);
+                RealTimeTester tester = new RealTimeTester(frameOwner, frameOwner.adviser);
                 tester.test();
             }
         });

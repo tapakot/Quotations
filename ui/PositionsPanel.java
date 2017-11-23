@@ -22,7 +22,7 @@ class PositionsPanel extends JPanel {
         this.buffer = buffer;
         panelOfPositions = null;
         positions = null;
-        setMinimumSize(new Dimension(300, 200));
+        setMinimumSize(new Dimension(500, 200));
         setMaximumSize(new Dimension(300, 1000));
         setPreferredSize(getMinimumSize());
 

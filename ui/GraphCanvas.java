@@ -19,6 +19,7 @@ class GraphCanvas extends JPanel{
     QuotationBuffer buffer;
     int period; //5, 15, 30, 60, 1440
     /** 100 last quotations (to draw) */
+    AnalyserBuffer anBuf;
     ArrayList<Quotation> Quotations; //last
     ArrayList<Double> maxs;
     ArrayList<Double> mins;
@@ -134,7 +135,7 @@ class GraphCanvas extends JPanel{
         //resistance lines
         if(resLines_f){
             g2d.setColor(Color.BLUE);
-            for(ResistanceLine line : resLines){
+            for(ResistanceLine line : anBuf.exLines){
                 g2d.fillRect(0, getY(line.high), width, getY(line.low)-getY(line.high));
             }
         }
@@ -189,11 +190,11 @@ class GraphCanvas extends JPanel{
 
         if(extremes_f){
             g2d.setColor(Color.CYAN);
-            for(Double min : mins){
+            for(Double min : anBuf.minimums){
                 g2d.drawLine(0, getY(min), width, getY(min));
             }
             g2d.setColor(Color.RED);
-            for(Double max : maxs){
+            for(Double max : anBuf.maximums){
                 g2d.drawLine(0, getY(max), width, getY(max));
             }
         }
@@ -201,7 +202,7 @@ class GraphCanvas extends JPanel{
         if(trLines_f){
             g2d.setColor(Color.ORANGE);
             int x1, x2, y1, y2;
-            for(TrendLine tl : trLines){
+            for(TrendLine tl : anBuf.trendLines){
                 //from the 1st (first one) bar to the 99th (last one)
                 x1 = (int)tl.coordinates.get(0).getX(); //index of bar
                 y1 = getY(tl.getY(x1));
@@ -214,29 +215,31 @@ class GraphCanvas extends JPanel{
 
         if(tdSequences_f){
             g2d.setColor(Color.ORANGE);
-            for(TDSequence seq : tdSequences){
-                for(TDLine line : seq.lines){
-                    int x1 = line.coordinates[0].index-3;
-                    double y1 = line.getY(line.coordinates[0].index-3);
-                    int x2 = line.coordinates[1].index+3;
-                    double y2 = line.getY(line.coordinates[1].index+3);
-                    g2d.drawLine(getX(x1), getY(y1), getX(x2), getY(y2));
+            for(TDSequence seq : anBuf.tdSequences){
+                if(seq.lines.size()>=2) {
+                    for (TDLine line : seq.lines) {
+                        int x1 = line.coordinates[0].index - 3;
+                        double y1 = line.getY(line.coordinates[0].index - 3);
+                        int x2 = line.coordinates[1].index + 3;
+                        double y2 = line.getY(line.coordinates[1].index + 3);
+                        g2d.drawLine(getX(x1), getY(y1), getX(x2), getY(y2));
+                    }
                 }
             }
         }
 
-        if(innerLine_f && innerLine!=null){
+        if(innerLine_f && anBuf.innerTrendLine!=null){
             g2d.setColor(Color.ORANGE);
             int x1 = 0;
-            double y1 = innerLine.getY(x1);
+            double y1 = anBuf.innerTrendLine.getY(x1);
             int x2 = HIST_COUNT;
-            double y2 = innerLine.getY(x2);
+            double y2 = anBuf.innerTrendLine.getY(x2);
             g2d.drawLine(getX(x1), getY(y1), getX(x2), getY(y2));
         }
 
         if(movingAverages_f){
             g2d.setColor(Color.GREEN);
-            for(MovingAverage movingAverage : movingAverages){
+            for(MovingAverage movingAverage : anBuf.movingAverages){
                 for(int i = 0; i<movingAverage.values.size()-2; i++){
                     int x1 = (int)movingAverage.values.get(i).getX();
                     double y1 = movingAverage.values.get(i).getY();
@@ -262,6 +265,24 @@ class GraphCanvas extends JPanel{
         return spaceBetweenBars + (barPeriod * index);
     }
 
+    void findAnBuffer(){
+        int indexOfQuoBuffer = -1;
+        int indexOfPeriod = -1;
+        for(QuotationBuffer buf : MainFrame.analyser.buffers){
+            if(buffer.name.equals(buf.name)){
+                indexOfQuoBuffer = MainFrame.analyser.buffers.indexOf(buf);
+            }
+        }
+        for(String per : PERIODS){
+            if(period == Integer.parseInt(per)){
+                indexOfPeriod = PERIODS.indexOf(per);
+            }
+        }
+        if(indexOfQuoBuffer != -1){
+            anBuf = MainFrame.analyser.anBuffers.get(indexOfQuoBuffer*PERIODS.size() + indexOfPeriod);
+        }
+    }
+
     void realTimeEvent(int counter){
         if(counter%period == 0){
             Quotations.remove(0);
@@ -271,42 +292,34 @@ class GraphCanvas extends JPanel{
     }
 
     /** commands to repaint with extremes */
-    void drawExtremes(ArrayList<Double> maxs, ArrayList<Double> mins){ //! true/false. analise just before repainting in paintComponent()
-        extremes_f = true;
-        this.maxs = maxs;
-        this.mins = mins;
+    void drawExtremes(boolean draw){ //! true/false. analise just before repainting in paintComponent()
+        extremes_f = draw;
         repaint();
-
     }
 
     /** commands to repaint with resistance lines. */
-    void drawResLines(ArrayList<ResistanceLine> resLines){
-        this.resLines = resLines;
-        resLines_f = true;
+    void drawResLines(boolean draw){
+        resLines_f = draw;
         repaint();
     }
 
-    void drawTrendLines(ArrayList<TrendLine> trLines){
-        this.trLines = trLines;
-        trLines_f = true;
+    void drawTrendLines(boolean draw){
+        trLines_f = draw;
         repaint();
     }
 
-    void drawTDSequences(ArrayList<TDSequence> tdSequences){
-        this.tdSequences = tdSequences;
-        tdSequences_f = true;
+    void drawTDSequences(boolean draw){
+        tdSequences_f = draw;
         repaint();
     }
 
-    void drawInnerLine(InnerTrendLine innerLine){
-        this.innerLine = innerLine;
-        innerLine_f = true;
+    void drawInnerLine(boolean draw){
+        innerLine_f = draw;
         repaint();
     }
 
-    void drawMA(ArrayList<MovingAverage> movingAverages){
-        this.movingAverages = movingAverages;
-        movingAverages_f = true;
+    void drawMA(boolean draw){
+        movingAverages_f = draw;
         repaint();
     }
 

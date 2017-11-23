@@ -143,7 +143,7 @@ public class QuotationBuffer {
     void realTimeEvent(Quotation quo){
         counter += quo.period;
         changeBuffer(quo);
-        showQuotations();
+        //showQuotations();
         worker.realTimeEvent(name, counter);
         if(counter == 1440){
             counter = 0;

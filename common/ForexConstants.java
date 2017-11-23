@@ -1,6 +1,8 @@
 package common;
 
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /** Class of constants.
  * Those constants are used in other classes.
@@ -9,6 +11,12 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 public class ForexConstants {
     public static final String propFileName = "res\\properties.ini";
     public static final String defPropFileName = "res\\default properties.ini";
+
+    public static ArrayList<String> PERIODS = new ArrayList<>();
+
+    public static Map<String, Integer> MULTIPLIERS = new HashMap<>();
+
+
 
     //constants not to change
     public static final int UP_DIRECTION = 1;
@@ -36,7 +44,7 @@ public class ForexConstants {
     public static int HIST_COUNT;
 
 
-    public static double EX_SENS_4;// 35?+ 20?+ 13?~
+    public static double EX_SENS_4;// 35?+ 20?+ 13?~  IN %  DIFFERENT FOR PERIODS
     public static double EX_SENS_2;//defines sensitivity to extremes (for finding)
     public static double EX_SENS_5;
     public static int WIDTH_OF_REL_EX;
@@ -61,6 +69,15 @@ public class ForexConstants {
     public static double TD_LINE_SENS;
 
     public static void applySettings(){
+        PERIODS.add("5");
+        PERIODS.add("15");
+        PERIODS.add("30");
+        PERIODS.add("60");
+        PERIODS.add("1440");
+
+        MULTIPLIERS.put("EURUSD", 500);
+        MULTIPLIERS.put("AUDUSD", 500);
+
         String sec = "common";
         RES_LINE_SENS = Double.parseDouble(Settings.properties.getProperty(sec+".RES_LINE_SENS"));
         TREND_LINE_SENS = Double.parseDouble(Settings.properties.getProperty(sec+".TREND_LINE_SENS"));

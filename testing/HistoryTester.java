@@ -38,12 +38,11 @@ public class HistoryTester {
     /** starts and manages test. returns the value of balance after test. */
     public double test(){
         //preparing
-        Adviser adviser = new Adviser();
         currentIndex = HIST_COUNT; //0-99 are analysed. 100th is the first to get advice about
         bufferAll5 = buffer.history5;
 
 
-        while(currentIndex < buffer.countHistory5) {
+        /*while(currentIndex < buffer.countHistory5) {
             List<Quotation> buffer100 = bufferAll5.subList(currentIndex - HIST_COUNT, currentIndex); //in, ex (0-99)
             Quotation currentQuo = bufferAll5.get(currentIndex);
             int advice = adviser.getAdvice(buffer100, currentQuo);
@@ -136,7 +135,7 @@ public class HistoryTester {
                 }
                 balance += profit + pos.money;
                 /*System.out.print("Position closed at " + nextOpen + ". was opened at " + pos.price + ". Profit: " + profit+". cause: "+cause);
-                System.out.println(" balance after closing: " + balance);*/
+                System.out.println(" balance after closing: " + balance);
                 positions.remove(pos);
             }
             toClose.clear();
@@ -146,13 +145,13 @@ public class HistoryTester {
             if(upCounter != 0) {upCounter--;}
             if(downCounter != 0){downCounter--;}
         }
-
+*/
         //bufferAll = null; //buffer.history becomes null
         return balance;
     }
 
     /** imitates an opening */
-    void openPosition(double price, int direction, int money){
+    /*void openPosition(double price, int direction, int money){
         if((balance - money >= 0)&&(balance>=50)) {
             balance -= money;
             //informing output
@@ -162,13 +161,13 @@ public class HistoryTester {
             } else {
                 System.out.print(" in DOWN direction.");
             }
-            System.out.println(" money: " + money + ". balance after opening: " + balance);*/
+            System.out.println(" money: " + money + ". balance after opening: " + balance);/
 
             positions.add(new Position(price, direction, money, 100));
         } else {
             //System.out.println("not enough money to open position");
         }
-    }
+    }*/
 
     /** imitates a closing */
     private void closePosition(Position posToClose, int cause){    // wrong!!! (why?) twice profit
