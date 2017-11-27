@@ -47,12 +47,12 @@ public class Worker {
         //start buffer. wait for it
         buffer = new QuotationBuffer("EURUSD", this);
         while (!buffer.isReady){}   //waits for buffer initialisation
-        buffer2 = new QuotationBuffer("AUDUSD", this);
-        while (!buffer2.isReady){}   //waits for buffer initialisation
+        //buffer2 = new QuotationBuffer("AUDUSD", this);
+        //while (!buffer2.isReady){}   //waits for buffer initialisation
 
         //start analyser
         Analyser analyser = new Analyser(buffer);
-        analyser.addBuffer(buffer2);
+        //analyser.addBuffer(buffer2);
 
         //start advicer
         Adviser adviser = new Adviser(analyser);
@@ -64,7 +64,7 @@ public class Worker {
         mainFrame = ui.getFrame();
         mainFrame.setAnalyser(analyser);
         mainFrame.setAdviser(adviser);
-        mainFrame.addBuffer(buffer2);
+        //mainFrame.addBuffer(buffer2);
 
         mainFrame.linkAll();
 

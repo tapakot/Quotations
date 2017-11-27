@@ -112,7 +112,8 @@ public class Analyser {
         RelativeExtreme.analyseForRelExtremes(toAnalyse, anBuf);
         TDSequence.analyseForTDSequence(toAnalyse, anBuf);
         InnerTrendLine.analyseForInnerTrendLine(anBuf);
-        anBuf.movingAverages.add(new MovingAverage(toAn, DEFAULT_MA));
+        anBuf.movingAverages.add(new MovingAverage(toAn, 14));
+        RSI.analyseFor(toAn, anBuf, 14);
     }
 
     /** returns a buffer with values of indicators */

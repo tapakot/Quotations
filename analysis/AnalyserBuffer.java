@@ -17,6 +17,7 @@ public class AnalyserBuffer {
     volatile public ArrayList<TDSequence> tdSequences;
     volatile public InnerTrendLine innerTrendLine;
     volatile public ArrayList<MovingAverage> movingAverages;
+    volatile public ArrayList<Double> rsi;
 
     /** initialising */
     public AnalyserBuffer(){
@@ -31,6 +32,7 @@ public class AnalyserBuffer {
         tdSequences = new ArrayList<TDSequence>();
         innerTrendLine = new InnerTrendLine(0, 0);
         movingAverages = new ArrayList<MovingAverage>();
+        rsi = new ArrayList<>();
     }
 
     public void clean(){
@@ -45,5 +47,6 @@ public class AnalyserBuffer {
         tdSequences.clear();
         innerTrendLine.change(0, 0);
         movingAverages.clear();
+        rsi.clear();
     }
 }

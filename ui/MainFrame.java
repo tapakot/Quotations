@@ -30,7 +30,9 @@ public class MainFrame extends JFrame{
     Box center;
     JTabbedPane instrumentPane;
     static GraphCanvas graphCanvas;
+    static OscillatorCanvas osCanvas;
     static PositionsPanel posPanel;
+    static Box graphicBox;
 
     /** preparations and start.
      * sets panes, Layout Manager and size.
@@ -45,8 +47,7 @@ public class MainFrame extends JFrame{
 
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        super.setMinimumSize(new Dimension(1000, 400));
-        super.setPreferredSize(getMinimumSize());
+        super.setMinimumSize(new Dimension(1000, 800));
 
         MenuBar menuBar = new MenuBar(buffer, this);
         setJMenuBar(menuBar);
@@ -88,21 +89,47 @@ public class MainFrame extends JFrame{
     public void addBuffer(QuotationBuffer buffer){
         buffers.add(buffer);
         JTabbedPane periodPane = new JTabbedPane(JTabbedPane.TOP, SCROLL_TAB_LAYOUT);
+
         graphCanvas = new GraphCanvas(buffer, 5);
-        periodPane.addTab("5", graphCanvas);
+        osCanvas = new OscillatorCanvas(graphCanvas);
+        graphicBox = Box.createVerticalBox();
+        graphicBox.add(graphCanvas);
+        graphicBox.add(osCanvas);
+        periodPane.addTab("5", graphicBox);
         canvases.add(graphCanvas);
+
         graphCanvas = new GraphCanvas(buffer, 15);
-        periodPane.addTab("15", graphCanvas);
+        osCanvas = new OscillatorCanvas(graphCanvas);
+        graphicBox = Box.createVerticalBox();
+        graphicBox.add(graphCanvas);
+        graphicBox.add(osCanvas);
+        periodPane.addTab("15", graphicBox);
         canvases.add(graphCanvas);
+
         graphCanvas = new GraphCanvas(buffer, 30);
-        periodPane.addTab("30", graphCanvas);
+        osCanvas = new OscillatorCanvas(graphCanvas);
+        graphicBox = Box.createVerticalBox();
+        graphicBox.add(graphCanvas);
+        graphicBox.add(osCanvas);
+        periodPane.addTab("30", graphicBox);
         canvases.add(graphCanvas);
+
         graphCanvas = new GraphCanvas(buffer, 60);
-        periodPane.addTab("hour", graphCanvas);
+        osCanvas = new OscillatorCanvas(graphCanvas);
+        graphicBox = Box.createVerticalBox();
+        graphicBox.add(graphCanvas);
+        graphicBox.add(osCanvas);
+        periodPane.addTab("hour", graphicBox);
         canvases.add(graphCanvas);
+
         graphCanvas = new GraphCanvas(buffer, 1440);
-        periodPane.addTab("day", graphCanvas);
+        osCanvas = new OscillatorCanvas(graphCanvas);
+        graphicBox = Box.createVerticalBox();
+        graphicBox.add(graphCanvas);
+        graphicBox.add(osCanvas);
+        periodPane.addTab("day", graphicBox);
         canvases.add(graphCanvas);
+
         instrumentPane.addTab(buffer.name, periodPane);
         validate();
         repaint();

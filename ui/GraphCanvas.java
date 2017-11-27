@@ -21,13 +21,7 @@ class GraphCanvas extends JPanel{
     /** 100 last quotations (to draw) */
     AnalyserBuffer anBuf;
     ArrayList<Quotation> Quotations; //last
-    ArrayList<Double> maxs;
-    ArrayList<Double> mins;
-    ArrayList<ResistanceLine> resLines;
-    ArrayList<TrendLine> trLines;
-    ArrayList<TDSequence> tdSequences;
-    InnerTrendLine innerLine;
-    ArrayList<MovingAverage> movingAverages;
+    ArrayList<OscillatorCanvas> oscillators;
 
     //1 pip = 0,00001;
     int height; //height of the visible canvas
@@ -59,6 +53,7 @@ class GraphCanvas extends JPanel{
         this.buffer = buffer;
         this.period = period;
         Quotations = new ArrayList<>();
+        oscillators = new ArrayList<>();
         countOfBars = HIST_COUNT-1;
         for(int i= 0; i<countOfBars; i++){
             // should be changed by realTimeEvent
@@ -281,6 +276,14 @@ class GraphCanvas extends JPanel{
         if(indexOfQuoBuffer != -1){
             anBuf = MainFrame.analyser.anBuffers.get(indexOfQuoBuffer*PERIODS.size() + indexOfPeriod);
         }
+        //link oscillators
+        for(OscillatorCanvas oc : oscillators){
+            oc.setValues(anBuf.rsi);
+        }
+    }
+
+    void addOC(OscillatorCanvas newOC){
+        oscillators.add(newOC);
     }
 
     void realTimeEvent(int counter){

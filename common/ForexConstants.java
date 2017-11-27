@@ -56,6 +56,7 @@ public class ForexConstants {
     public static double ADV_TREND_LINES;
     public static double ADV_TD_LINES;
     public static double ADV_INNER_TREND_LINE;
+    public static double ADV_RSI;
 
     public static int WIDTH_OF_BAR;
     public static int gridPeriod; //period of marks of the grid
@@ -95,6 +96,7 @@ public class ForexConstants {
         ADV_TREND_LINES = Double.parseDouble(Settings.properties.getProperty(sec+".ADV_TREND_LINES"));
         ADV_TD_LINES = Double.parseDouble(Settings.properties.getProperty(sec+".ADV_TD_LINES"));
         ADV_INNER_TREND_LINE = Double.parseDouble(Settings.properties.getProperty(sec+".ADV_INNER_TREND_LINE"));
+        ADV_RSI = Double.parseDouble(Settings.properties.getProperty(sec+".ADV_RSI"));
         OVER_RES_LINE = Double.parseDouble(Settings.properties.getProperty(sec+".OVER_RES_LINE"));
         OVER_TREND_LINE = Double.parseDouble(Settings.properties.getProperty(sec+".OVER_TREND_LINE"));
         OVER_TD_LINE = Double.parseDouble(Settings.properties.getProperty(sec+".OVER_TD_LINE"));

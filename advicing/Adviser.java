@@ -30,8 +30,7 @@ public class Adviser {
     }
 
     public int getAdvice(String instrumentName, Quotation quo){
-
-
+        analyser.analyseAll();
         this.quo = quo;
         int indexOfBuffer = -1;
         for(QuotationBuffer buf : analyser.buffers){
@@ -50,6 +49,31 @@ public class Adviser {
 
 
     void analyse(String instrumentName, Quotation quo){
+        //via RSI
+
+        double sum = RSI.getAdviceFor(analyser, instrumentName, quo);
+
+        if(sum>0) {
+            if(sum >= UP_ADVICE_MIN_VALUE){
+                advice = ADVICE_UP;
+            } else if (sum >= CLOSE_DOWN_MIN_VALUE){
+                advice = ADVICE_CLOSE_DOWN;
+            } else {
+                advice = ADVICE_STAY;
+            }
+        } else if(sum<0){
+            if (sum <= DOWN_ADVICE_MAX_VALUE) {
+                advice = ADVICE_DOWN;
+            } else if (sum <= CLOSE_UP_MAX_VALUE){
+                advice = ADVICE_CLOSE_UP;
+            } else {
+                advice = ADVICE_STAY;
+            }
+        } else {
+            advice = ADVICE_STAY;
+        }
+        //via summarising
+        /*
         double sum = summariseIndicators(instrumentName, quo);
 
         if(sum>0) {
@@ -71,6 +95,7 @@ public class Adviser {
         } else {
             advice = ADVICE_STAY;
         }
+        */
     }
 
     // returns an integer value of advice. absolute value of the returned value is dependence of the advice
